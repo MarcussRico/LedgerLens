@@ -91,7 +91,7 @@ export function S10Proof() {
           <div className="hatch col-span-12 border border-[var(--color-signal-dim)] px-6 py-7 sm:px-9 lg:col-span-9">
             <p className="kicker text-[var(--color-signal)]">Where we are weakest</p>
             <p className="mt-4 text-[clamp(1.25rem,2.4vw,1.75rem)] leading-tight text-[var(--color-paper)]">
-              Vendor Integrity is our least precise pillar, at <span className="num text-[var(--color-signal)]">{(WEAKNESS.precision * 100).toFixed(1)}%</span>.
+              We catch <span className="num text-[var(--color-signal)]">15 of 18</span> planted price-gouging cases.
             </p>
             <p className="mt-4 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[var(--color-paper-dim)]">{WEAKNESS.reason}</p>
             <p className="mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[var(--color-paper-dim)]">{WEAKNESS.fix}</p>

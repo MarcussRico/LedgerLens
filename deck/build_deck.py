@@ -310,15 +310,15 @@ text(s, M + 0.3, 6.68, 11.3, 0.28,
 s = new_slide(3, "Features", "Forty-two detectors. Seven working views. One evidence trail.")
 
 pillars = [
-    ("01", "Duplicates &\nOverpayment", 8, 41, 0.972, GOLD,
+    ("01", "Duplicates &\nOverpayment", 8, 41, 0.947, GOLD,
      "near-duplicate matching\ntransposition-tolerant numbers\ncross-alias duplicates"),
-    ("02", "Price & Vendor\nIntelligence", 9, 38, 0.951, SLATE,
+    ("02", "Price & Vendor\nIntelligence", 9, 38, 0.971, SLATE,
      "peer-median benchmarking\nprice-creep regression\nrate-card violation"),
-    ("03", "Behavioural\nAnomalies", 11, 47, 0.908, SIGNAL,
+    ("03", "Behavioural\nAnomalies", 11, 47, 0.915, SIGNAL,
      "PO splitting · threshold hugging\nBenford's Law\nIsolation Forest outliers"),
-    ("04", "Vendor Integrity\n& Collusion", 8, 22, 0.964, CLAY,
+    ("04", "Vendor Integrity\n& Collusion", 8, 22, 1.000, CLAY,
      "shared-attribute rings\nvendor ↔ employee links\nbank change before payment"),
-    ("05", "Compliance\n& Process", 6, 15, 0.981, VERIFY,
+    ("05", "Compliance\n& Process", 6, 15, 0.978, VERIFY,
      "three-way match\nduplicate GST numbering\nMSME 45-day breach, s.43B(h)"),
 ]
 x, CW = M, 2.28
@@ -529,7 +529,7 @@ rows = [("Unit of analysis", "one record at a time",
         ("Risk score", "one opaque weighted sum",
          "five decomposable pillars, live weights, every point traced to a rule", False),
         ("Accuracy claim", "none possible",
-         "87.5% precision / 98.0% recall against 150 planted frauds — measured, "
+         "92.5% precision / 98.0% recall against 150 planted frauds — measured, "
          "not asserted", True),
         ("Role of the LLM", "asked to judge the data",
          "forbidden from arithmetic — language only", False),
@@ -635,7 +635,7 @@ for i, (nm, val, col) in enumerate(stages):
 RX5 = M + 7.9
 vline(s, RX5 - 0.3, BODY_TOP, 4.6, LINE, 0.9)
 text(s, RX5, BODY_TOP, 4.0, 0.26, " ".join("MEASURED, NOT ASSERTED"), size=8.5, font=MONO, color=MUTED)
-mets = [("87.5%", "precision"), ("98.0%", "recall"), ("92.5%", "F1")]
+mets = [("92.5%", "precision"), ("98.0%", "recall"), ("95.1%", "F1")]
 mx = RX5
 for v, k in mets:
     rect(s, mx, BODY_TOP + 0.32, 1.24, 0.78, PANEL, LINE, 0.8)
@@ -643,7 +643,7 @@ for v, k in mets:
     text(s, mx, BODY_TOP + 0.80, 1.24, 0.24, k, size=8, font=MONO, color=MUTED, align=PP_ALIGN.CENTER)
     mx += 1.32
 text(s, RX5, BODY_TOP + 1.20, 4.0, 0.60,
-     "TP 147 · FP 21 · FN 3 · TN 1,358\n"
+     "TP 147 · FP 12 · FN 3 · TN 1,384\n"
      "TP 147 + FN 3 = the 150 frauds we planted.\n"
      "python -m ledgerlens.eval.run",
      size=8.5, font=MONO, color=PAPER_DIM, spacing=1.34)
@@ -651,9 +651,9 @@ text(s, RX5, BODY_TOP + 1.20, 4.0, 0.60,
 rect(s, RX5, BODY_TOP + 1.78, 4.0, 0.92, None, SIGNAL_DIM, 1.0)
 text(s, RX5 + 0.16, BODY_TOP + 1.90, 3.7, 0.26, "Where we are weakest", size=9.5, color=SIGNAL)
 text(s, RX5 + 0.16, BODY_TOP + 2.16, 3.7, 0.62,
-     "Vendor Integrity is our least precise pillar at 77.8% — about one finding in five "
-     "is an incidental attribute collision, not a relationship. We would rather show you "
-     "that than round it away.",
+     "We catch 15 of 18 planted price-gouging cases. The misses sit just above the peer "
+     "median where barely three vendors are comparable. Lowering the threshold would catch "
+     "them and flag ordinary variation as fraud, which is worse.",
      size=8.5, color=PAPER_DIM, spacing=1.3)
 
 text(s, RX5, BODY_TOP + 2.80, 4.0, 0.26, " ".join("FUTURE SCOPE"), size=8.5, font=MONO, color=GOLD)
@@ -678,7 +678,7 @@ text(s, M, 2.15, 10.6, 1.9,
      size=40, font=DISPLAY, color=PAPER, spacing=1.06)
 hline(s, M, 4.5, W - 2 * M, LINE, 0.9)
 cols = [("₹18,42,650", "recoverable, identified", GOLD),
-        ("87.5% / 98.0%", "precision / recall, measured", VERIFY),
+        ("92.5% / 98.0%", "precision / recall, measured", VERIFY),
         ("42", "detectors, 5 pillars", PAPER),
         ("0", "numbers written by a language model", SIGNAL)]
 x = M

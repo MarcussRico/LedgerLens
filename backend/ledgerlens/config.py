@@ -47,6 +47,38 @@ class AnalysisConfig(BaseModel):
     benford_alpha: float = 0.01
     year_end_multiple: float = 2.0
 
+    # ── vendor-ring link evidence ─────────────────────────────────────────
+    #: How discriminating each shared attribute is. Two vendors paid into one
+    #: bank account are, for payment purposes, one payee — that is close to
+    #: conclusive. Two vendors on gmail.com are two small businesses.
+    ring_attribute_weight: dict[str, float] = Field(
+        default_factory=lambda: {
+            "bank account": 1.00,
+            "PAN": 0.95,
+            "registered address": 0.55,
+            "phone number": 0.45,
+            "email domain": 0.20,
+        }
+    )
+    #: Combined evidence a link must carry before it forms a ring. At 1.0 a
+    #: shared bank account qualifies alone; an address plus a phone qualifies;
+    #: a shared email domain alone never does.
+    ring_link_threshold: float = 1.0
+    #: Attributes whose weight is discounted when many vendors share the value.
+    #: A bank account is not less suspicious for being shared by three vendors —
+    #: it is more so — hence it is absent here.
+    ring_prevalence_discounted: list[str] = Field(
+        default_factory=lambda: ["registered address", "phone number", "email domain"]
+    )
+    #: Domains that carry no identity signal at all.
+    ring_ignored_domains: list[str] = Field(
+        default_factory=lambda: [
+            "gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.in", "hotmail.com",
+            "outlook.com", "live.com", "rediffmail.com", "aol.com", "protonmail.com",
+            "icloud.com", "zoho.com", "mail.com", "yandex.com", "gmx.com",
+        ]
+    )
+
     # ── scoring ───────────────────────────────────────────────────────────
     pillar_weights: dict[str, float] = Field(
         default_factory=lambda: {

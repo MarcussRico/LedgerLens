@@ -30,9 +30,18 @@ def test_generation_is_deterministic():
 
 def test_accuracy_does_not_regress():
     r = _run()
-    assert r.precision >= 0.80, f"precision regressed to {r.precision:.3f}"
-    assert r.recall >= 0.90, f"recall regressed to {r.recall:.3f}"
+    assert r.precision >= 0.90, f"precision regressed to {r.precision:.3f}"
+    assert r.recall >= 0.95, f"recall regressed to {r.recall:.3f}"
     assert r.tp + r.fn == r.planted == 150
+
+
+def test_incidental_collisions_are_not_reported_as_rings():
+    """The corpus deliberately contains vendors sharing a free-mail domain, an
+    industrial estate and an accountant's phone. None of them is a ring, and a
+    pillar that cannot tell them apart is not precise."""
+    r = _run()
+    assert r.by_pillar["VND"].precision >= 0.95, (
+        f"ring detection over-asserted: {r.by_pillar['VND'].precision:.3f}")
 
 
 def test_every_pillar_contributes_detections():

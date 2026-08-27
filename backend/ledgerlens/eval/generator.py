@@ -508,6 +508,70 @@ def generate(
                                   invoice_ids=ids, vendor_ids=[v],
                                   note="filings concentrated between 23:00 and 04:00"))
 
+    # Built last, deliberately: created earlier, these vendors were visible to
+    # rng.choice(vendors) during fraud planting and some were selected as fraud
+    # carriers, so a vendor was labelled both clean-cohort and fraudulent and
+    # the harness scored their ring findings as true positives.
+    # ── incidental attribute collisions, deliberately CLEAN ───────────────
+    # Real vendor masters are full of shared attributes that mean nothing: small
+    # suppliers on free mail, firms co-located in one industrial estate, two
+    # businesses whose registrations were filed by the same accountant. These
+    # are NOT planted frauds. A collusion detector that cannot tell them from a
+    # ring is not precise, and without them in the corpus the pillar is never
+    # actually tested.
+    n_free_mail, n_estate, n_accountant = 15, 8, 3
+    shared_estate = "12 SIDCO Industrial Estate, Guindy"
+    shared_phone = "+91 9840112233"
+
+    for k in range(n_free_mail):
+        vid = f"V-FM{k:02d}"
+        vendors.append({
+            "vendor_id": vid, "name": f"{FIRST[(k * 3) % len(FIRST)]} {SUFFIX[k % len(SUFFIX)]} Co",
+            "gstin": _gstin(rng, _pan(rng, f"FM{k}")), "pan": _pan(rng, f"FM{k}"),
+            "bank_account": f"KVBL-{700000 + k}",       # each its own account
+            "address": f"{200 + k}/1 {rng.choice(['Bazaar Street', 'Mount Road'])}",
+            "phone": f"+91 9{rng.randint(100000000, 999999999)}",
+            "email_domain": "gmail.com",                 # the weak attribute
+            "onboarded_at": start.isoformat(),
+            "msme_registered": True, "category": rng.choice(CATEGORIES),
+        })
+        when = rdate()
+        rec = new_invoice(vid, when, rng.uniform(8_000, 90_000))
+        add_lines(rec["invoice_id"], vid, when)
+
+    for k in range(n_estate):
+        vid = f"V-IE{k:02d}"
+        vendors.append({
+            "vendor_id": vid, "name": f"{FIRST[(k * 7 + 2) % len(FIRST)]} Fabricators",
+            "gstin": _gstin(rng, _pan(rng, f"IE{k}")), "pan": _pan(rng, f"IE{k}"),
+            "bank_account": f"AXIS-{800000 + k}",
+            "address": shared_estate,                    # legitimately co-located
+            "phone": f"+91 9{rng.randint(100000000, 999999999)}",
+            "email_domain": f"fab{k}works.co.in",
+            "onboarded_at": start.isoformat(),
+            "msme_registered": False, "category": "Raw Materials",
+        })
+        when = rdate()
+        rec = new_invoice(vid, when, rng.uniform(20_000, 3_00_000))
+        add_lines(rec["invoice_id"], vid, when)
+
+    for k in range(n_accountant):
+        vid = f"V-AC{k:02d}"
+        vendors.append({
+            "vendor_id": vid, "name": f"{FIRST[(k * 5 + 9) % len(FIRST)]} Consultancy",
+            "gstin": _gstin(rng, _pan(rng, f"AC{k}")), "pan": _pan(rng, f"AC{k}"),
+            "bank_account": f"SBIN-{850000 + k}",
+            "address": f"{300 + k}/4 Luz Corner",
+            "phone": shared_phone,                       # one accountant filed all three
+            "email_domain": f"consult{k}.co.in",
+            "onboarded_at": start.isoformat(),
+            "msme_registered": True, "category": "Professional Services",
+        })
+        when = rdate()
+        rec = new_invoice(vid, when, rng.uniform(15_000, 1_20_000))
+        add_lines(rec["invoice_id"], vid, when)
+
+
     return SyntheticCorpus(
         invoices=pd.DataFrame(invoices), pos=pd.DataFrame(pos),
         grns=pd.DataFrame(grns), vendors=pd.DataFrame(vendors),

@@ -43,7 +43,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.936, findings: 47,
+    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.915, findings: 47,
     blurb: 'No single transaction is wrong. The shape of the distribution is wrong.',
     detectors: [
       { id: 'BEH-001', name: 'PO splitting', flagship: true, note: 'n orders · one vendor · one approval window · each sitting below the sign-off threshold.' },
@@ -60,7 +60,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 4, key: 'ring', pillar: 'Vendor Integrity & Collusion', accent: 'clay', precision: 0.778, findings: 22,
+    n: 4, key: 'ring', pillar: 'Vendor Integrity & Collusion', accent: 'clay', precision: 1.0, findings: 22,
     blurb: 'These facts live in three systems owned by three teams. Nobody joins vendor master data to HR records at 11pm.',
     detectors: [
       { id: 'VND-001', name: 'Shared-attribute vendor rings', flagship: true, note: 'Bank account · PAN · address · phone · email domain, resolved into connected components.' },

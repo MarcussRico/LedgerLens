@@ -69,29 +69,29 @@ export const RECOVERED = 6_21_400
       *findings* that matched no planted fraud; TN counts *invoices* left
       unflagged. Presenting them as one partition would be tidier and wrong. ── */
 export const EVAL_CORPUS = {
-  invoices: 1_670,
+  invoices: 1_696,
   planted: 150,
   seed: 20260827,
   command: 'python -m ledgerlens.eval.run',
   note: 'A labelled corpus built to measure the engine — separate from the demo dataset shown here.',
 }
-export const confusion = { tp: 147, fp: 21, fn: 3, tn: 1_358 }
+export const confusion = { tp: 147, fp: 12, fn: 3, tn: 1_384 }
 export const PLANTED = confusion.tp + confusion.fn // 150
-export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.875
+export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.925
 export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.980
-export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.925
+export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.952
 
 export const pillarPrecision = pillars.map((p) => ({ pillar: p.pillar, key: p.key, precision: p.precision, accent: p.accent }))
 
 export const WEAKNESS = {
-  detector: 'VND · Vendor Integrity & Collusion',
-  precision: 0.778,
-  recall: 1.0,
+  detector: 'PRC-001 · unit-price benchmarking',
+  precision: 0.915,
+  recall: 0.833,
   reason:
-    'This pillar catches every planted ring, but it is our least precise: roughly one in five of its findings is an incidental attribute collision rather than a relationship. Two unrelated vendors can share a phone number because a shared accountant filed both registrations.',
-  fix: 'Weighting links by how discriminating the shared attribute is — a bank account is near-conclusive, an email domain is weak evidence — should lift this materially. It is the next thing we would fix, and we would rather show you the number than round it away.',
+    'Price gouging is our weakest fraud type at 15 of 18 caught. The three misses sit only just above the peer median on items where barely three vendors are comparable — and a median across three vendors is barely a median. We could catch them by lowering the deviation threshold, and we would then flag ordinary price variation as fraud, which is worse.',
+  fix: 'The honest fix is more comparable supply, not a looser rule. Where an item has fewer than about five independent vendors, treat the benchmark as indicative and say so on the finding rather than pretending to a precision the data cannot support.',
   secondary:
-    'Price gouging is the weakest single fraud type at 15 of 18 caught (83%). The three misses sit just above the peer median on SKUs with only three comparable vendors, where a median is barely a median.',
+    'Behavioural is now the least precise pillar at 91.5%. Its Isolation Forest detector surfaces multivariate outliers that are unusual but not always wrong — which is the honest nature of an unsupervised model, and why its findings carry the lowest confidence of any detector we ship.',
 }
 
 /* ── Derivations. Every rupee figure on the site resolves to one of these. ── */

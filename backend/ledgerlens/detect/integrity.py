@@ -11,6 +11,7 @@ precisely so this pillar can see them.
 """
 from __future__ import annotations
 
+import math
 import re
 
 import networkx as nx
@@ -28,6 +29,18 @@ SHARED_ATTRS = [
     ("phone", "phone number", 16),
     ("email_domain", "email domain", 12),
 ]
+
+
+def _prevalence_discount(n_sharing: int) -> float:
+    """How much a shared value is worth when many vendors share it.
+
+    Two vendors at one address is a fact about those two. Eight vendors at one
+    address is an industrial estate, and says almost nothing about any pair
+    within it. 1 / (1 + log2(n-1)) is gentle on pairs and harsh on cohorts.
+    """
+    if n_sharing <= 2:
+        return 1.0
+    return 1.0 / (1.0 + math.log2(n_sharing - 1))
 
 
 def _key(v) -> str | None:
@@ -61,23 +74,57 @@ class VendorRings:
         graph = nx.Graph()
         graph.add_nodes_from(vendors["vendor_id"].astype(str))
 
-        for field, label, weight in SHARED_ATTRS:
+        cfg = ctx.config
+        weights = cfg.ring_attribute_weight
+        discounted = set(cfg.ring_prevalence_discounted)
+        ignored_domains = {d.lower() for d in cfg.ring_ignored_domains}
+        suppressed: list[dict] = []
+
+        for field, label, points in SHARED_ATTRS:
             if field not in vendors.columns:
                 continue
             norm = (vendors[field].map(_norm_addr) if field == "address"
                     else vendors[field].map(_key))
+            base = weights.get(label, 0.0)
+            if base <= 0:
+                continue
             for value, grp in vendors.groupby(norm.rename("k"), dropna=True):
                 ids = grp["vendor_id"].astype(str).tolist()
                 if len(ids) < 2:
                     continue
+                # a free-mail or hosting domain carries no identity signal
+                if field == "email_domain" and str(value).lower() in ignored_domains:
+                    suppressed.append({"attribute": label, "value": str(value),
+                                       "vendors": len(ids), "reason": "generic domain"})
+                    continue
+                discount = _prevalence_discount(len(ids)) if label in discounted else 1.0
+                evidence_weight = base * discount
                 for i, a in enumerate(ids):
                     for b in ids[i + 1:]:
                         if graph.has_edge(a, b):
                             graph[a][b]["attrs"].append(label)
-                            graph[a][b]["weight"] += weight
+                            graph[a][b]["evidence"] += evidence_weight
+                            graph[a][b]["points"] += points
+                            graph[a][b]["values"][label] = str(value)
                         else:
-                            graph.add_edge(a, b, attrs=[label], weight=weight,
+                            graph.add_edge(a, b, attrs=[label],
+                                           evidence=evidence_weight, points=points,
                                            values={label: str(value)})
+
+        # Drop links that do not carry enough evidence to be worth asserting.
+        # A false collusion finding implicitly claims a relationship between a
+        # named vendor and, often, a named employee. That costs more than a
+        # false duplicate, so this pillar is deliberately held to a higher bar.
+        thin = [(a, b, d) for a, b, d in graph.edges(data=True)
+                if d["evidence"] < cfg.ring_link_threshold]
+        for a, b, d in thin:
+            suppressed.append({
+                "attribute": " + ".join(sorted(set(d["attrs"]))),
+                "vendors": 2, "evidence": round(d["evidence"], 3),
+                "threshold": cfg.ring_link_threshold,
+                "reason": "shared attributes too weak to assert a relationship",
+            })
+            graph.remove_edge(a, b)
 
         out: list[Finding] = []
         for component in nx.connected_components(graph):
@@ -87,9 +134,10 @@ class VendorRings:
             if not sub.edges:
                 continue
             shared = sorted({a for _, _, d in sub.edges(data=True) for a in d["attrs"]})
+            strongest = max(sub.edges(data=True), key=lambda e: e[2]["evidence"])[2]
             names = {vid: ctx.vendor_name(vid) for vid in sorted(component)}
             ring_spend = sum(spend.get(v, 0.0) for v in component)
-            strength = sum(d["weight"] for _, _, d in sub.edges(data=True))
+            strength = sum(d["points"] for _, _, d in sub.edges(data=True))
             confidence = min(0.95, 0.5 + 0.06 * strength / max(len(component), 1))
             out.append(make(
                 "VND-001", key=tuple(sorted(component)),
@@ -105,6 +153,14 @@ class VendorRings:
                         for a, b, d in sub.edges(data=True)
                     ],
                     "combined_spend": round(ring_spend, 2),
+                    "link_evidence": round(float(strongest["evidence"]), 3),
+                    "link_threshold": cfg.ring_link_threshold,
+                    "attribute_weights": {a: weights.get(a) for a in shared},
+                    "weighting_note": (
+                        "Each shared attribute is weighted by how discriminating it is, "
+                        "then discounted by how many vendors share the same value. A link "
+                        "forms only above the threshold."
+                    ),
                 },
                 money=ring_spend, confidence=confidence,
                 explanation=(
