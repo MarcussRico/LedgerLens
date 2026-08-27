@@ -64,6 +64,9 @@ ITEMS = [
 # small list made ~16% of the "clean" baseline self-approved, so CMP-006
 # correctly fired everywhere and the measured precision collapsed. The
 # detector was right; the simulated data was not clean.
+CITY_TAGS = ["Madurai", "Coimbatore", "Chennai", "Salem", "Trichy", "Erode",
+             "Hosur", "Karur", "Tiruppur", "Sivakasi"]
+
 APPROVERS = [f"E-1{i:02d} {n}" for i, n in enumerate(
     ["R. Muthukumar", "S. Anitha", "K. Prakash", "D. Lakshmi", "V. Sundaram",
      "A. Fathima", "P. Raghavan", "N. Devika", "M. Sathish", "J. Kavitha",
@@ -133,8 +136,22 @@ def generate(
 
     # ── vendors ───────────────────────────────────────────────────────────
     vendors: list[dict] = []
+    seen_names: set[str] = set()
     for i in range(n_vendors):
+        # The name pool cycles, so a plain modulo produced genuinely identical
+        # trade names on legally distinct vendors (different GSTINs, so
+        # resolution correctly refused to merge them). VND-001 then flagged
+        # them on their derived email domain — defensible behaviour, but not a
+        # planted fraud, so it read as a false positive and depressed the
+        # measured precision of the whole pillar.
         name = f"{FIRST[i % len(FIRST)]} {SUFFIX[(i * 5 + 3) % len(SUFFIX)]}"
+        if name in seen_names:
+            name = f"{name} ({CITY_TAGS[i % len(CITY_TAGS)]})"
+        suffix_n = 2
+        while name in seen_names:
+            name = f"{FIRST[i % len(FIRST)]} {SUFFIX[(i * 5 + 3) % len(SUFFIX)]} {suffix_n}"
+            suffix_n += 1
+        seen_names.add(name)
         pan = _pan(rng, name)
         vendors.append({
             "vendor_id": f"V-{i + 1:03d}", "name": name,
@@ -145,7 +162,11 @@ def generate(
             "address": f"{rng.randint(2, 188)}/{rng.randint(1, 9)} "
                        f"{rng.choice(['Bypass Road', 'GST Road', 'Mill Street', 'Industrial Estate'])}",
             "phone": f"+91 9{rng.randint(100000000, 999999999)}",
-            "email_domain": "".join(c for c in name.lower() if c.isalpha())[:12] + ".co.in",
+            # derived from the vendor id as well as the name: truncating the
+            # name alone collapsed "Venkat Distributors" and "Venkat
+            # Distributors (Erode)" onto one domain
+            "email_domain": ("".join(c for c in name.lower() if c.isalnum())[:14]
+                             + str(i) + ".co.in"),
             "onboarded_at": (start - timedelta(days=rng.randint(30, 900))).isoformat(),
             "msme_registered": rng.random() < 0.35,
             "category": CATEGORIES[i % len(CATEGORIES)],
