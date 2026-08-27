@@ -51,8 +51,8 @@ def health() -> dict:
         "status": "ok",
         "detectors": len(registry.all_detectors()),
         "pillars": len({d.pillar for d in registry.all_detectors()}),
-        "llm_available": llm.available(),
-        "llm_role": "schema mapping, explanation and drafting only — never arithmetic",
+        "llmAvailable": llm.available(),
+        "llmRole": "schema mapping, explanation and drafting only — never arithmetic",
     }
 
 
@@ -61,7 +61,12 @@ def detectors() -> dict:
     rows = registry.summary()
     return {
         "count": len(rows),
-        "baseline_free": sum(1 for r in rows if r["baseline_free"]),
+        "baselineFree": sum(1 for r in rows if r["baseline_free"]),
+        "opportunity": sum(1 for r in rows if r.get("opportunity")),
+        "byPillar": {
+            p: sum(1 for r in rows if r["pillar"] == p)
+            for p in sorted({r["pillar"] for r in rows})
+        },
         "detectors": camelise(rows),
     }
 

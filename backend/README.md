@@ -73,14 +73,32 @@ would erase the finding the pillar exists to produce.
 pair, the savings model counts the event once at the highest single assessment.
 Summing them inflated the headline by 3×.
 
-## Deploy
+## Deployed
 
-The API cannot run on Vercel Functions — pandas, scikit-learn and DuckDB total
-~358 MB against a 250 MB limit. Use Render:
+**https://ledgerlens-api-production-8ed9.up.railway.app**
 
 ```bash
-render deploy        # or connect the repo in the dashboard; render.yaml is here
+curl https://ledgerlens-api-production-8ed9.up.railway.app/api/health
 ```
 
-Set `GROQ_API_KEY` in the Render dashboard. The service runs without it —
-schema mapping falls back to deterministic matching and drafting is disabled.
+The API cannot run on Vercel Functions — pandas, scikit-learn and DuckDB total
+~358 MB against a 250 MB limit. It runs on Railway from the `Dockerfile` here.
+`render.yaml` is also committed if you would rather move it.
+
+```bash
+railway up --service ledgerlens-api
+```
+
+`GROQ_API_KEY` is set as a Railway variable, never in the repo. The service runs
+without it — schema mapping falls back to deterministic matching, and drafting
+returns 503 rather than guessing.
+
+### Routes
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/health` | detector count, LLM availability |
+| GET | `/api/detectors` | the full registry, by pillar |
+| POST | `/api/analyse` | upload CSV/XLSX → findings, savings, risk scores |
+| POST | `/api/explain` | rephrase a finding for an audience (language only) |
+| POST | `/api/draft` | draft recovery email / audit memo (language only) |
