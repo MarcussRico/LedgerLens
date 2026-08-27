@@ -23,12 +23,18 @@ def detector(
     name: str,
     *,
     baseline_free: bool = False,
+    opportunity: bool = False,
 ) -> Callable[[type], type]:
     """Register a detector class under its rule_id.
 
     baseline_free: True when the detector needs no trust in the client's own
     history — a mathematical invariant, an external fact, or a structural
     property. Only these survive `zero_trust` mode.
+
+    opportunity: True when the detector surfaces a savings opportunity rather
+    than an anomaly. A consolidation opportunity is a correct, useful finding
+    but it is not a fraud claim, so scoring it against fraud ground truth would
+    understate precision and misdescribe what the engine does.
     """
     def wrap(cls: type) -> type:
         prefix = rule_id.split("-")[0]
@@ -40,6 +46,7 @@ def detector(
         cls.name = name                  # type: ignore[attr-defined]
         cls.pillar = PILLAR_PREFIX[prefix]   # type: ignore[attr-defined]
         cls.baseline_free = baseline_free    # type: ignore[attr-defined]
+        cls.opportunity = opportunity        # type: ignore[attr-defined]
         _REGISTRY[rule_id] = cls()       # type: ignore[assignment]
         return cls
     return wrap
@@ -92,6 +99,7 @@ def load_all() -> None:
 def summary() -> list[dict]:
     return [
         {"rule_id": d.rule_id, "name": d.name, "pillar": str(d.pillar),
-         "baseline_free": d.baseline_free}
+         "baseline_free": d.baseline_free,
+         "opportunity": getattr(d, "opportunity", False)}
         for d in all_detectors()
     ]

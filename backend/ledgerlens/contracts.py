@@ -138,6 +138,7 @@ class Detector(Protocol):
     pillar: Pillar
     name: str
     baseline_free: bool
+    opportunity: bool
 
     def run(self, ctx: "AnalysisContext") -> list[Finding]: ...
 

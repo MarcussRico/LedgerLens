@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ledgerlens-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      # Set this in the Render dashboard, not here. The repo must never carry it.
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
