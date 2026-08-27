@@ -8,7 +8,9 @@ This API powers "analyse your own data", which is the part that has to be real.
 from __future__ import annotations
 
 import logging
+import re
 import time
+from datetime import date
 from typing import Annotated
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -216,6 +218,105 @@ def explain(req: ExplainRequest) -> dict:
             "source": "llm" if out else "deterministic"}
 
 
+_MD_PATTERNS = [
+    (r"\*\*(.+?)\*\*", r"\1"),      # bold
+    (r"(?<!\w)\*(.+?)\*(?!\w)", r"\1"),  # italic
+    (r"^#{1,6}\s*", ""),             # headings
+    (r"^\s*[-*+]\s+", "  "),         # bullets
+    (r"^\s*\|.*\|\s*$", None),      # table rows
+    (r"^\s*[-|: ]{6,}\s*$", None),   # table rules and --- separators
+]
+
+
+#: A drafted letter must never ship with a gap in it. If the model leaves one
+#: anyway, that draft is discarded rather than shown — a placeholder in front of
+#: a client is worse than a plainer template.
+_PLACEHOLDER = re.compile(
+    r"\[[^\]]{0,60}\]|<[a-z ]{2,40}>|\bTBD\b|\bXXX+\b|\bN/?A\b\s*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+_NUM = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+def _numeric_atoms(value: object, into: set[str]) -> None:
+    """Every number reachable from the inputs, normalised."""
+    if isinstance(value, bool):
+        return
+    if isinstance(value, (int, float)):
+        into.add(f"{float(value):g}")
+        into.add(f"{float(value):.0f}")
+        return
+    if isinstance(value, dict):
+        for k, v in value.items():
+            _numeric_atoms(k, into)
+            _numeric_atoms(v, into)
+        return
+    if isinstance(value, (list, tuple, set)):
+        for v in value:
+            _numeric_atoms(v, into)
+        return
+    for m in _NUM.finditer(str(value)):
+        raw = m.group(0).replace(",", "")
+        try:
+            into.add(f"{float(raw):g}")
+            into.add(f"{float(raw):.0f}")
+        except ValueError:
+            continue
+
+
+def unsourced_number(text: str, allowed: set[str]) -> str | None:
+    """The first number in the draft that did not come from the inputs.
+
+    The hard rule is that no language model ever produces a number in this
+    system. Instructing it is not the same as enforcing it: this checks. A
+    model that helpfully totals two invoices has computed something, and that
+    draft is discarded rather than shown.
+    """
+    for m in _NUM.finditer(text):
+        raw = m.group(0).replace(",", "")
+        try:
+            val = float(raw)
+        except ValueError:
+            continue
+        # ordinals and small counts in prose ("within five days", "1.") are not
+        # claims about the data
+        if val <= 31 and val == int(val):
+            continue
+        if f"{val:g}" in allowed or f"{val:.0f}" in allowed:
+            continue
+        return m.group(0)
+    return None
+
+
+def has_placeholder(text: str) -> str | None:
+    m = _PLACEHOLDER.search(text)
+    return m.group(0) if m else None
+
+
+def _strip_markdown(text: str) -> str:
+    """The model is asked for plain text and mostly complies; this makes sure.
+    A letter with ### and pipe tables in it is not ready to send."""
+    lines: list[str] = []
+    for raw in text.splitlines():
+        line = raw
+        drop = False
+        for pattern, repl in _MD_PATTERNS:
+            if repl is None:
+                if re.match(pattern, line):
+                    drop = True
+                    break
+            else:
+                line = re.sub(pattern, repl, line, flags=re.MULTILINE)
+        if drop:
+            continue
+        lines.append(line.rstrip())
+    out = "\n".join(lines)
+    out = re.sub(r"\n{3,}", "\n\n", out).strip()
+    return out
+
+
 class DraftRequest(BaseModel):
     kind: str = "recovery-email"
     vendor_name: str
@@ -236,21 +337,72 @@ def draft(req: DraftRequest) -> dict:
         "audit-memo": "a confidential memo to the audit committee",
         "commercial-review": "a renegotiation letter ahead of contract renewal",
     }.get(req.kind, "a professional letter")
+    today = date.today().strftime("%d %B %Y")
     out = llm.complete(
         system=(
-            "You draft procurement correspondence. Every figure, date and "
-            "document number must be copied exactly from the evidence given; "
-            "you may not compute, infer or round any number. Do not allege "
-            "fraud or name an individual as culpable — describe the discrepancy "
-            "and request reconciliation."
+            "You draft procurement correspondence that is ready to send as-is.\n"
+            "RULES:\n"
+            "1. Every figure, date and document number must be copied exactly "
+            "from the evidence given. You may not compute, infer or round any "
+            "number.\n"
+            "2. Plain text only. No markdown whatsoever — no **bold**, no ### "
+            "headings, no bullet characters, no pipe tables. Use ordinary "
+            "sentences, blank lines between paragraphs, and simple indented "
+            "lines for any list.\n"
+            "3. Never leave a placeholder. No [insert date], no [name], no "
+            "[signature], no TBD, no square brackets of any kind. Every detail "
+            "you need is supplied below, including the date and the exact "
+            "closing block to sign off with. If something genuinely is not "
+            "supplied, write the sentence without it rather than marking a gap.\n"
+            "4. Do not allege fraud and do not name an individual as culpable. "
+            "Describe the discrepancy and request reconciliation.\n"
+            "5. Do not add, total, subtract or otherwise derive any number. "
+            "If two invoices are ₹1,00,000 each, do not write that they sum to "
+            "₹2,00,000 — that figure was not given to you. Every number in your "
+            "letter must appear verbatim in the evidence. This is checked, and a "
+            "letter containing a number you derived is discarded.\n"
+            "6. Be concise: at most 250 words."
         ),
         user=(
-            f"Write {kind_brief}.\nFrom: {req.client_name}\nTo: {req.vendor_name}\n"
-            f"Rule: {req.rule_id}\nAmount: {inr(req.money_at_risk)}\n"
-            f"Evidence: {req.evidence}"
+            f"Write {kind_brief}.\n"
+            f"Today's date: {today}\n"
+            f"From: {req.client_name}, Accounts Payable\n"
+            f"To: {req.vendor_name}\n"
+            f"Detector reference: {req.rule_id}\n"
+            f"Amount at issue: {inr(req.money_at_risk)}\n"
+            f"Evidence (use these figures verbatim): {req.evidence}\n\n"
+            f"End the letter with exactly this closing block and nothing after it:\n"
+            f"Regards,\n"
+            f"Accounts Payable\n"
+            f"{req.client_name}"
         ),
         max_tokens=900,
     )
+    if out:
+        out = _strip_markdown(out)
+        gap = has_placeholder(out)
+        if gap:
+            log.warning("draft rejected, model left a placeholder: %r", gap)
+            raise HTTPException(
+                502,
+                f"The drafted letter came back with an unfilled placeholder ({gap}). "
+                f"Discarded rather than shown — use the deterministic template.",
+            )
+        allowed: set[str] = set()
+        _numeric_atoms(req.evidence, allowed)
+        _numeric_atoms(req.money_at_risk, allowed)
+        _numeric_atoms(req.rule_id, allowed)
+        _numeric_atoms(today, allowed)
+        _numeric_atoms(inr(req.money_at_risk), allowed)
+        invented = unsourced_number(out, allowed)
+        if invented:
+            log.warning("draft rejected, model produced an unsourced number: %r", invented)
+            raise HTTPException(
+                502,
+                f"The drafted letter contained a number ({invented}) that does not appear "
+                f"in the evidence. No language model may produce a figure in this system, "
+                f"so the draft was discarded.",
+            )
     if not out:
         raise HTTPException(502, "drafting service unavailable")
     return {"draft": out, "kind": req.kind}
