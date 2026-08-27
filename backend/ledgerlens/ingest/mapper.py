@@ -20,8 +20,8 @@ import pandas as pd
 from ledgerlens import llm
 from ledgerlens.ingest.profile import FileProfile, profile_frame
 from ledgerlens.ingest.schema import (
-    GRN_FIELDS, INVOICE_FIELDS, LINE_FIELDS, PO_FIELDS, VENDOR_FIELDS,
-    deterministic_match,
+    EMPLOYEE_FIELDS, GRN_FIELDS, INVOICE_FIELDS, LINE_FIELDS, PO_FIELDS,
+    VENDOR_FIELDS, deterministic_match,
 )
 
 log = logging.getLogger(__name__)
@@ -32,6 +32,10 @@ KIND_FIELDS = {
     "grns": GRN_FIELDS,
     "vendors": VENDOR_FIELDS,
     "lines": LINE_FIELDS,
+    # Omitting this silently discarded every employee file: with no allowed
+    # fields nothing could map, and the LLM was never even consulted because
+    # there was nothing left for it to place. VND-003 then had no data.
+    "employees": EMPLOYEE_FIELDS,
 }
 
 
@@ -82,7 +86,7 @@ def map_columns(df: pd.DataFrame, kind: str, *, use_llm: bool = True) -> Mapping
 
     # 1 + 2 — exact and alias
     for col in prof.columns:
-        target = deterministic_match(col.name)
+        target = deterministic_match(col.name, kind)
         if target and target in allowed and target not in taken:
             method = "exact" if col.name.lower() == target else "alias"
             mappings.append(ColumnMapping(col.name, target, method, 1.0))

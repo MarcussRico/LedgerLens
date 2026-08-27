@@ -42,7 +42,9 @@ None of it is in our schema, because real exports never are:
  69 raw descriptions →   54 catalogue items
   0 rows rejected
   ↓
-42 detectors · 90 findings · 5.2 seconds
+48 of 49 columns placed with no model at all
+  ↓
+42 detectors · 93 findings · 5.2 seconds
 ```
 
 | Pillar | Findings |
@@ -51,7 +53,7 @@ None of it is in our schema, because real exports never are:
 | Price & Vendor Intelligence | 23 |
 | Duplicates & Overpayment | 21 |
 | Compliance & Process | 14 |
-| Vendor Integrity & Collusion | 5 |
+| Vendor Integrity & Collusion | 8 |
 
 | Tier | Amount | Confidence |
 |---|---|---|

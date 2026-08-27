@@ -67,10 +67,17 @@ class AnalysisContext:
 
     # ── convenience ───────────────────────────────────────────────────────
     def vendor_name(self, vendor_id: str) -> str:
-        if self.vendors.empty:
+        """Falls back to the id rather than raising. A missing optional column
+        should degrade a finding's wording, never take the detector down."""
+        if self.vendors.empty or "name" not in self.vendors.columns:
+            return vendor_id
+        if "vendor_id" not in self.vendors.columns:
             return vendor_id
         hit = self.vendors.loc[self.vendors["vendor_id"] == vendor_id, "name"]
-        return str(hit.iloc[0]) if len(hit) else vendor_id
+        if not len(hit):
+            return vendor_id
+        value = hit.iloc[0]
+        return vendor_id if pd.isna(value) else str(value)
 
     def is_msme(self, vendor_id: str) -> bool:
         if self.vendors.empty or "msme_registered" not in self.vendors.columns:
