@@ -195,7 +195,7 @@ RX = 9.05
 vline(s, RX - 0.42, 1.44, 3.9, LINE, 0.9)
 facts = [("5,847", "invoices analysed"), ("1,203", "purchase orders"),
          ("118", "vendors · 96 resolved entities"), ("42", "detectors across 5 pillars"),
-         ("163", "findings, every one traceable"), ("94.4%", "precision on planted ground truth")]
+         ("163", "findings, every one traceable"), ("92.5%", "precision on planted ground truth")]
 yy = 1.44
 for v, k in facts:
     text(s, RX, yy, 3.4, 0.34, v, size=19, font=MONO, color=PAPER)
