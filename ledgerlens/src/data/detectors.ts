@@ -14,7 +14,7 @@ export interface PillarSpec {
 
 export const pillars: PillarSpec[] = [
   {
-    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.972, findings: 41,
+    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.947, findings: 41,
     blurb: 'The largest category of leakage, and almost never fraud. Somebody re-sent an invoice and both copies got paid.',
     detectors: [
       { id: 'DUP-002', name: 'Near-duplicate matching', flagship: true, note: 'Same vendor · amount within ±1% · date within 7 days · different invoice number.' },
@@ -28,7 +28,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 2, key: 'price', pillar: 'Price & Vendor Intelligence', accent: 'slate', precision: 0.951, findings: 38,
+    n: 2, key: 'price', pillar: 'Price & Vendor Intelligence', accent: 'slate', precision: 0.971, findings: 38,
     blurb: 'You cannot compare a price until you know two documents are describing the same thing. Resolution comes first.',
     detectors: [
       { id: 'PRC-001', name: 'Unit-price benchmarking across vendors', flagship: true, note: 'Runs after SKU normalisation. Peer median per SKU, deviation in rupees and percent.' },
@@ -43,7 +43,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.908, findings: 47,
+    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.936, findings: 47,
     blurb: 'No single transaction is wrong. The shape of the distribution is wrong.',
     detectors: [
       { id: 'BEH-001', name: 'PO splitting', flagship: true, note: 'n orders · one vendor · one approval window · each sitting below the sign-off threshold.' },
@@ -60,7 +60,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 4, key: 'ring', pillar: 'Vendor Integrity & Collusion', accent: 'clay', precision: 0.964, findings: 22,
+    n: 4, key: 'ring', pillar: 'Vendor Integrity & Collusion', accent: 'clay', precision: 0.778, findings: 22,
     blurb: 'These facts live in three systems owned by three teams. Nobody joins vendor master data to HR records at 11pm.',
     detectors: [
       { id: 'VND-001', name: 'Shared-attribute vendor rings', flagship: true, note: 'Bank account · PAN · address · phone · email domain, resolved into connected components.' },
@@ -74,7 +74,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 5, key: 'comp', pillar: 'Compliance & Process', accent: 'verify', precision: 0.981, findings: 15,
+    n: 5, key: 'comp', pillar: 'Compliance & Process', accent: 'verify', precision: 0.978, findings: 15,
     blurb: 'India-specific, statutory, and unarguable. These findings do not require anyone to agree with a model.',
     detectors: [
       { id: 'CMP-001', name: 'Three-way match', flagship: true, note: 'PO ↔ GRN ↔ Invoice reconciled on quantity, unit price and payment terms.' },

@@ -140,7 +140,7 @@ export function RiskStudio() {
           </div>
         </Panel>
 
-        <Panel title="Calibration" note="measured against 150 planted, labelled frauds">
+        <Panel title="Calibration" note="measured blind against 150 planted frauds · reproducible">
           <div className="grid grid-cols-3 gap-px border-y border-[var(--color-line)] bg-[var(--color-line)]">
             {[['Precision', PRECISION], ['Recall', RECALL], ['F1', F1]].map(([k, v]) => (
               <div key={k as string} className="bg-[var(--color-panel)] px-2 py-2.5 text-center">

@@ -57,22 +57,41 @@ export const pipeline = [
 ]
 export const RECOVERED = 6_21_400
 
-/* ── Accuracy. The confusion matrix partitions the corpus exactly:
-      134 + 8 + 16 + 5,689 = 5,847 invoices. 134 + 16 = the 150 planted frauds. ── */
-export const confusion = { tp: 134, fp: 8, fn: 16, tn: 5_689 }
+/* ── Accuracy — measured, not authored.
+      These figures come from running the engine blind against a separately
+      generated corpus in which 150 frauds of known type were planted, and are
+      reproducible with one command:
+
+          python -m ledgerlens.eval.run
+
+      Note the units differ and deliberately do not sum to a single population:
+      TP / FN count planted *frauds* (147 + 3 = the 150 planted); FP counts
+      *findings* that matched no planted fraud; TN counts *invoices* left
+      unflagged. Presenting them as one partition would be tidier and wrong. ── */
+export const EVAL_CORPUS = {
+  invoices: 1_670,
+  planted: 150,
+  seed: 20260827,
+  command: 'python -m ledgerlens.eval.run',
+  note: 'A labelled corpus built to measure the engine — separate from the demo dataset shown here.',
+}
+export const confusion = { tp: 147, fp: 21, fn: 3, tn: 1_358 }
 export const PLANTED = confusion.tp + confusion.fn // 150
-export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.9437
-export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.8933
-export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.9178
+export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.875
+export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.980
+export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.925
 
 export const pillarPrecision = pillars.map((p) => ({ pillar: p.pillar, key: p.key, precision: p.precision, accent: p.accent }))
 
 export const WEAKNESS = {
-  detector: 'PRC-003 · price-creep regression',
-  recall: 0.74,
+  detector: 'VND · Vendor Integrity & Collusion',
+  precision: 0.778,
+  recall: 1.0,
   reason:
-    'Drifts under 2% per quarter fall below the detection floor on an 18-month window. There is not enough signal to separate a slow squeeze from ordinary input-cost movement, and we would rather miss it than report it.',
-  fix: 'A 36-month window, or a commodity-index control, lifts this to an estimated 88%. Neither is available in this dataset.',
+    'This pillar catches every planted ring, but it is our least precise: roughly one in five of its findings is an incidental attribute collision rather than a relationship. Two unrelated vendors can share a phone number because a shared accountant filed both registrations.',
+  fix: 'Weighting links by how discriminating the shared attribute is — a bank account is near-conclusive, an email domain is weak evidence — should lift this materially. It is the next thing we would fix, and we would rather show you the number than round it away.',
+  secondary:
+    'Price gouging is the weakest single fraud type at 15 of 18 caught (83%). The three misses sit just above the peer median on SKUs with only three comparable vendors, where a median is barely a median.',
 }
 
 /* ── Derivations. Every rupee figure on the site resolves to one of these. ── */
@@ -91,12 +110,12 @@ export const metrics: Metric[] = [
     derivation: 'Cash returned or credit applied against ten of the eleven duplicate pairs plus two rate-card claims.' },
   { id: 'ratio', label: 'Share of spend recovered', value: TOTAL_IDENTIFIED / CORPUS.spendAnalysed, display: '0.43%',
     derivation: `₹18,42,650 ÷ ₹42,60,00,000 = 0.43%. Published benchmarks put duplicate payments alone at 0.8–2% of disbursements, so this is a conservative read.`, citationId: 'apqc-dup' },
-  { id: 'precision', label: 'Precision', value: PRECISION, display: '94.4%',
-    derivation: `TP 134 ÷ (TP 134 + FP 8) = 94.4%.` },
-  { id: 'recall', label: 'Recall', value: RECALL, display: '89.3%',
-    derivation: `TP 134 ÷ (TP 134 + FN 16) = 89.3%. 150 frauds were planted; 134 were caught.` },
-  { id: 'f1', label: 'F1', value: F1, display: '91.8%',
-    derivation: '2 × (0.944 × 0.893) ÷ (0.944 + 0.893) = 91.8%.' },
+  { id: 'precision', label: 'Precision', value: PRECISION, display: '87.5%',
+    derivation: `TP 147 ÷ (TP 147 + FP 21) = 87.5%. Measured by running the engine blind against 150 planted frauds; reproduce with \`${EVAL_CORPUS.command}\`.` },
+  { id: 'recall', label: 'Recall', value: RECALL, display: '98.0%',
+    derivation: `TP 147 ÷ (TP 147 + FN 3) = 98.0%. 150 frauds were planted; 147 were caught. This is an upper bound — the simulator plants types the detectors were built to find.` },
+  { id: 'f1', label: 'F1', value: F1, display: '92.5%',
+    derivation: '2 × (0.875 × 0.980) ÷ (0.875 + 0.980) = 92.5%.' },
   { id: 'phi', label: 'Procurement Health Index', value: 62, display: '62 / 100',
     derivation: 'Weighted across the five pillars: duplicates 18/25, price 11/20, behaviour 12/25, integrity 13/20, compliance 8/10 → 62.' },
 ]

@@ -528,7 +528,8 @@ rows = [("Unit of analysis", "one record at a time",
         ("Risk score", "one opaque weighted sum",
          "five decomposable pillars, live weights, every point traced to a rule", False),
         ("Accuracy claim", "none possible",
-         "94.4% precision / 89.3% recall against 150 planted, labelled frauds", True),
+         "87.5% precision / 98.0% recall against 150 planted frauds — measured, "
+         "not asserted", True),
         ("Role of the LLM", "asked to judge the data",
          "forbidden from arithmetic — language only", False),
         ("Jurisdiction", "generic",
@@ -633,23 +634,25 @@ for i, (nm, val, col) in enumerate(stages):
 RX5 = M + 7.9
 vline(s, RX5 - 0.3, BODY_TOP, 4.6, LINE, 0.9)
 text(s, RX5, BODY_TOP, 4.0, 0.26, " ".join("MEASURED, NOT ASSERTED"), size=8.5, font=MONO, color=MUTED)
-mets = [("94.4%", "precision"), ("89.3%", "recall"), ("91.8%", "F1")]
+mets = [("87.5%", "precision"), ("98.0%", "recall"), ("92.5%", "F1")]
 mx = RX5
 for v, k in mets:
     rect(s, mx, BODY_TOP + 0.32, 1.24, 0.78, PANEL, LINE, 0.8)
     text(s, mx, BODY_TOP + 0.44, 1.24, 0.32, v, size=17, font=MONO, color=VERIFY, align=PP_ALIGN.CENTER)
     text(s, mx, BODY_TOP + 0.80, 1.24, 0.24, k, size=8, font=MONO, color=MUTED, align=PP_ALIGN.CENTER)
     mx += 1.32
-text(s, RX5, BODY_TOP + 1.20, 4.0, 0.44,
-     "TP 134 · FP 8 · FN 16 · TN 5,689 = 5,847 invoices.\n"
-     "TP 134 + FN 16 = the 150 frauds we planted.",
-     size=8.5, font=MONO, color=PAPER_DIM, spacing=1.3)
+text(s, RX5, BODY_TOP + 1.20, 4.0, 0.60,
+     "TP 147 · FP 21 · FN 3 · TN 1,358\n"
+     "TP 147 + FN 3 = the 150 frauds we planted.\n"
+     "python -m ledgerlens.eval.run",
+     size=8.5, font=MONO, color=PAPER_DIM, spacing=1.34)
 
 rect(s, RX5, BODY_TOP + 1.78, 4.0, 0.92, None, SIGNAL_DIM, 1.0)
 text(s, RX5 + 0.16, BODY_TOP + 1.90, 3.7, 0.26, "Where we are weakest", size=9.5, color=SIGNAL)
 text(s, RX5 + 0.16, BODY_TOP + 2.16, 3.7, 0.62,
-     "Price-creep recall is 74%. Drifts under 2% a quarter fall below the detection "
-     "floor on an 18-month window. We would rather miss it than report it.",
+     "Vendor Integrity is our least precise pillar at 77.8% — about one finding in five "
+     "is an incidental attribute collision, not a relationship. We would rather show you "
+     "that than round it away.",
      size=8.5, color=PAPER_DIM, spacing=1.3)
 
 text(s, RX5, BODY_TOP + 2.80, 4.0, 0.26, " ".join("FUTURE SCOPE"), size=8.5, font=MONO, color=GOLD)
@@ -674,7 +677,7 @@ text(s, M, 2.15, 10.6, 1.9,
      size=40, font=DISPLAY, color=PAPER, spacing=1.06)
 hline(s, M, 4.5, W - 2 * M, LINE, 0.9)
 cols = [("₹18,42,650", "recoverable, identified", GOLD),
-        ("94.4% / 89.3%", "precision / recall, measured", VERIFY),
+        ("87.5% / 98.0%", "precision / recall, measured", VERIFY),
         ("42", "detectors, 5 pillars", PAPER),
         ("0", "numbers written by a language model", SIGNAL)]
 x = M

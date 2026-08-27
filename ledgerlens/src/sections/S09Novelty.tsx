@@ -11,7 +11,7 @@ const ROWS: { k: string; obvious: string; ours: string; hero?: boolean }[] = [
   { k: 'Risk score', obvious: 'one opaque weighted sum',
     ours: 'five decomposable pillars, live-adjustable weights, every point traceable to a rule' },
   { k: 'Accuracy claim', obvious: 'none possible',
-    ours: `${(PRECISION * 100).toFixed(1)}% precision / ${(RECALL * 100).toFixed(1)}% recall against 150 deliberately planted, labelled frauds`, hero: true },
+    ours: `${(PRECISION * 100).toFixed(1)}% precision / ${(RECALL * 100).toFixed(1)}% recall against 150 planted frauds — measured, and reproducible with one command`, hero: true },
   { k: 'Role of the LLM', obvious: 'asked to judge the data',
     ours: 'forbidden from arithmetic. Language only' },
   { k: 'Output', obvious: '"47 anomalies detected"',
@@ -28,7 +28,7 @@ const NOVELTIES = [
   { n: '02', t: 'Resolution as a precondition, not a feature.',
     b: 'Vendor aliases and SKU variants are normalised before any comparison runs. Every competing demo that skips this is comparing strings and reporting noise.' },
   { n: '03', t: 'A falsifiable accuracy claim.',
-    b: 'We built a procurement fraud simulator that plants 150 labelled frauds of known type into realistic spend, which converts every claim on this page from an assertion into a measurement. Nobody else in this room can quote a precision figure.' },
+    b: 'We built a procurement fraud simulator that plants 150 labelled frauds of known type into realistic spend, which converts every claim on this page from an assertion into a measurement. One command reproduces the figure on any machine — and we report the pillar where we score worst, not just the headline.' },
   { n: '04', t: 'Deterministic scoring with a language-only LLM.',
     b: 'Auditable, reproducible, defensible in front of a regulator — the property that decides whether software like this is ever actually deployed.' },
 ]

@@ -1,14 +1,13 @@
 import { Section, Reveal, Ticker, Cite } from '../components/ui/primitives'
-import { confusion, PRECISION, RECALL, F1, PLANTED, pillarPrecision, WEAKNESS } from '../data/metrics'
+import { confusion, PRECISION, RECALL, F1, PLANTED, pillarPrecision, WEAKNESS, EVAL_CORPUS } from '../data/metrics'
 import { citations } from '../data/citations'
-import { CORPUS } from '../data/metrics'
 import { ArrowUpRight } from 'lucide-react'
 
 const CELLS = [
   { k: 'True positives', v: confusion.tp, note: 'planted frauds caught', colour: 'var(--color-verify)' },
-  { k: 'False positives', v: confusion.fp, note: 'flagged, but clean', colour: 'var(--color-signal)' },
+  { k: 'False positives', v: confusion.fp, note: 'findings matching no planted fraud', colour: 'var(--color-signal)' },
   { k: 'False negatives', v: confusion.fn, note: 'planted frauds missed', colour: 'var(--color-signal)' },
-  { k: 'True negatives', v: confusion.tn, note: 'clean and left alone', colour: 'var(--color-muted)' },
+  { k: 'True negatives', v: confusion.tn, note: 'clean invoices left unflagged', colour: 'var(--color-muted)' },
 ]
 
 export function S10Proof() {
@@ -18,9 +17,9 @@ export function S10Proof() {
       <Reveal delay={0.06}>
         <p className="mt-6 max-w-[58ch] text-[1.0625rem] leading-relaxed text-[var(--color-paper-dim)]">
           Ground truth exists because we planted it. A procurement fraud simulator injects {PLANTED} labelled
-          frauds of known type into realistic spend, at realistic rates, mixed through {CORPUS.invoices.toLocaleString('en-IN')} invoices.
-          The engine then runs blind. Because we know exactly what was planted, every claim on this page is a
-          measurement rather than an assertion.
+          frauds of known type into {EVAL_CORPUS.invoices.toLocaleString('en-IN')} invoices of realistic spend — a corpus built
+          to measure the engine, separate from the demo dataset shown above. The engine then runs blind.
+          Every figure below is reproducible with one command.
         </p>
       </Reveal>
 
@@ -40,6 +39,12 @@ export function S10Proof() {
           <p className="num mt-3 text-[0.6875rem] leading-relaxed text-[var(--color-muted)]">
             precision = {confusion.tp} ÷ ({confusion.tp} + {confusion.fp}) · recall = {confusion.tp} ÷ ({confusion.tp} + {confusion.fn})
           </p>
+          <p className="num mt-3 border border-[var(--color-line)] px-3 py-2 text-[0.6875rem] leading-relaxed text-[var(--color-verify)]">
+            {EVAL_CORPUS.command}
+          </p>
+          <p className="mt-2 text-[0.75rem] leading-relaxed text-[var(--color-muted)]">
+            Seeded at {EVAL_CORPUS.seed}. Same corpus, same result, on any machine.
+          </p>
         </Reveal>
 
         {/* confusion matrix */}
@@ -56,8 +61,8 @@ export function S10Proof() {
             ))}
           </div>
           <p className="num mt-3 text-[0.6875rem] leading-relaxed text-[var(--color-muted)]">
-            {confusion.tp} + {confusion.fp} + {confusion.fn} + {confusion.tn.toLocaleString('en-IN')} = {CORPUS.invoices.toLocaleString('en-IN')} invoices ·
-            {' '}{confusion.tp} + {confusion.fn} = {PLANTED} planted frauds
+            {confusion.tp} + {confusion.fn} = {PLANTED} planted frauds. TP and FN count frauds; FP counts findings;
+            TN counts invoices — three different units, so they deliberately do not sum to one population.
           </p>
         </Reveal>
       </div>
@@ -86,10 +91,11 @@ export function S10Proof() {
           <div className="hatch col-span-12 border border-[var(--color-signal-dim)] px-6 py-7 sm:px-9 lg:col-span-9">
             <p className="kicker text-[var(--color-signal)]">Where we are weakest</p>
             <p className="mt-4 text-[clamp(1.25rem,2.4vw,1.75rem)] leading-tight text-[var(--color-paper)]">
-              Recall on price-creep detection is <span className="num text-[var(--color-signal)]">{(WEAKNESS.recall * 100).toFixed(0)}%</span>.
+              Vendor Integrity is our least precise pillar, at <span className="num text-[var(--color-signal)]">{(WEAKNESS.precision * 100).toFixed(1)}%</span>.
             </p>
             <p className="mt-4 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[var(--color-paper-dim)]">{WEAKNESS.reason}</p>
             <p className="mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[var(--color-paper-dim)]">{WEAKNESS.fix}</p>
+            <p className="mt-3 max-w-[58ch] text-[0.875rem] leading-relaxed text-[var(--color-paper-dim)]">{WEAKNESS.secondary}</p>
             <p className="num mt-5 text-[0.6875rem] text-[var(--color-muted)]">{WEAKNESS.detector}</p>
           </div>
         </div>
