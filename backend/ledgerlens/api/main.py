@@ -141,7 +141,8 @@ async def analyse(
         raise HTTPException(422, f"could not read these files: {exc}") from exc
 
     findings = registry.run_all(ctx)
-    savings = build_savings(findings, ctx.total_spend)
+    savings = build_savings(findings, ctx.total_spend,
+                            ceiling=config.savings_plausibility_ceiling)
     vendor_scores = score_all_vendors(findings, ctx)
     phi = health_index(findings, ctx)
     elapsed = time.perf_counter() - started

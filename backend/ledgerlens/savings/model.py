@@ -67,6 +67,11 @@ class SavingsModel:
     total: float
     spend_analysed: float
     derivation: str
+    warning: str | None = None
+
+    @property
+    def share_of_spend(self) -> float:
+        return self.total / self.spend_analysed if self.spend_analysed else 0.0
 
     def as_dict(self) -> dict:
         return {
@@ -75,12 +80,24 @@ class SavingsModel:
             "total_display": inr(self.total),
             "spend_analysed": round(self.spend_analysed, 2),
             "spend_display": inr(self.spend_analysed),
-            "share_of_spend": (
-                round(self.total / self.spend_analysed * 100, 3)
-                if self.spend_analysed else 0.0
-            ),
+            "share_of_spend": round(self.share_of_spend * 100, 3),
             "derivation": self.derivation,
+            "warning": self.warning,
+            "measured_total": round(self.measured_total, 2),
+            "measured_display": inr(self.measured_total),
+            "modelled_total": round(self.modelled_total, 2),
+            "modelled_display": inr(self.modelled_total),
         }
+
+    @property
+    def measured_total(self) -> float:
+        """Money already spent that a document can prove. This is the number to
+        defend in a room; the modelled tier is a projection, not a claim."""
+        return sum(t.amount for t in self.tiers if t.confidence != "Modelled")
+
+    @property
+    def modelled_total(self) -> float:
+        return sum(t.amount for t in self.tiers if t.confidence == "Modelled")
 
 
 def _event_key(f: Finding) -> tuple:
@@ -142,7 +159,8 @@ def _tier(name: str, confidence: str, rules: set[str],
                 raw_finding_count=len(relevant))
 
 
-def build_savings(findings: list[Finding], spend_analysed: float) -> SavingsModel:
+def build_savings(findings: list[Finding], spend_analysed: float,
+                  ceiling: float = 0.05) -> SavingsModel:
     tiers = [
         _tier("Recoverable", "High", RECOVERABLE_RULES, findings,
               "Money already paid out that a debit note can pull back."),
@@ -152,10 +170,32 @@ def build_savings(findings: list[Finding], spend_analysed: float) -> SavingsMode
               "Consolidation and terms, achievable but not yet agreed."),
     ]
     total = sum(t.amount for t in tiers)
-    share = (total / spend_analysed * 100) if spend_analysed else 0.0
+    share = (total / spend_analysed) if spend_analysed else 0.0
     derivation = (
         " + ".join(f"{t.name} {inr(t.amount)}" for t in tiers)
-        + f" = {inr(total)} on {inr(spend_analysed)} analysed = {share:.2f}% of spend."
+        + f" = {inr(total)} on {inr(spend_analysed)} analysed = {share * 100:.2f}% of spend."
     )
-    return SavingsModel(tiers=tiers, total=total,
-                        spend_analysed=spend_analysed, derivation=derivation)
+
+    # A savings figure that is a large fraction of total spend is not a triumph,
+    # it is a signal that the modelled tier is doing too much work. Published
+    # duplicate-payment benchmarks sit near 1% of disbursements; anything an
+    # order of magnitude above that should announce itself rather than be
+    # presented as a clean claim.
+    warning = None
+    if share > ceiling:
+        modelled_share = (
+            sum(t.amount for t in tiers if t.confidence == "Modelled") / total
+            if total else 0.0
+        )
+        warning = (
+            f"This total is {share * 100:.1f}% of analysed spend, well above the "
+            f"{ceiling * 100:.0f}% we would treat as plausible. "
+            f"{modelled_share * 100:.0f}% of it comes from the modelled tier, which "
+            f"projects what could be renegotiated rather than what was demonstrably "
+            f"overpaid. Quote the measured tiers "
+            f"({inr(sum(t.amount for t in tiers if t.confidence != 'Modelled'))}) "
+            f"and treat the rest as an upper bound."
+        )
+
+    return SavingsModel(tiers=tiers, total=total, spend_analysed=spend_analysed,
+                        derivation=derivation, warning=warning)

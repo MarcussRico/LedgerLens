@@ -75,23 +75,23 @@ export const EVAL_CORPUS = {
   command: 'python -m ledgerlens.eval.run',
   note: 'A labelled corpus built to measure the engine — separate from the demo dataset shown here.',
 }
-export const confusion = { tp: 147, fp: 12, fn: 3, tn: 1_384 }
+export const confusion = { tp: 148, fp: 16, fn: 2, tn: 1_405 }
 export const PLANTED = confusion.tp + confusion.fn // 150
-export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.925
-export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.980
-export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.952
+export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.902
+export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.987
+export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.943
 
 export const pillarPrecision = pillars.map((p) => ({ pillar: p.pillar, key: p.key, precision: p.precision, accent: p.accent }))
 
 export const WEAKNESS = {
-  detector: 'PRC-001 · unit-price benchmarking',
-  precision: 0.915,
-  recall: 0.833,
+  detector: 'DUP · Duplicates & Overpayment',
+  precision: 0.914,
+  recall: 1.0,
   reason:
-    'Price gouging is our weakest fraud type at 15 of 18 caught. The three misses sit only just above the peer median on items where barely three vendors are comparable — and a median across three vendors is barely a median. We could catch them by lowering the deviation threshold, and we would then flag ordinary price variation as fraud, which is worse.',
-  fix: 'The honest fix is more comparable supply, not a looser rule. Where an item has fewer than about five independent vendors, treat the benchmark as indicative and say so on the finding rather than pretending to a precision the data cannot support.',
+    'Duplicates is our least precise pillar at 91.4%. Its transposition detector compares invoice numbers within an edit distance of two, and across a large corpus some genuinely distinct documents differ by that little. Every one of those is shown with both numbers side by side, so a reviewer dismisses it in seconds — but it is a false positive and we count it as one.',
+  fix: 'Requiring the line items to match as well as the amount would remove most of them. We have not shipped it because it would also lose the case where a vendor re-keys a bill with the items described differently, which is the exact pattern the detector exists to catch.',
   secondary:
-    'Behavioural is now the least precise pillar at 91.5%. Its Isolation Forest detector surfaces multivariate outliers that are unusual but not always wrong — which is the honest nature of an unsupervised model, and why its findings carry the lowest confidence of any detector we ship.',
+    'Recall reads 98.7% here, and that number should be treated as an upper bound rather than a promise. The simulator plants frauds of the types these detectors were written to find; it proves they work on their targets, not that they cover patterns nobody anticipated. Precision is the more trustworthy half of this measurement.',
 }
 
 /* ── Derivations. Every rupee figure on the site resolves to one of these. ── */
@@ -111,11 +111,11 @@ export const metrics: Metric[] = [
   { id: 'ratio', label: 'Share of spend recovered', value: TOTAL_IDENTIFIED / CORPUS.spendAnalysed, display: '0.43%',
     derivation: `₹18,42,650 ÷ ₹42,60,00,000 = 0.43%. Published benchmarks put duplicate payments alone at 0.8–2% of disbursements, so this is a conservative read.`, citationId: 'apqc-dup' },
   { id: 'precision', label: 'Precision', value: PRECISION, display: '87.5%',
-    derivation: `TP 147 ÷ (TP 147 + FP 21) = 87.5%. Measured by running the engine blind against 150 planted frauds; reproduce with \`${EVAL_CORPUS.command}\`.` },
-  { id: 'recall', label: 'Recall', value: RECALL, display: '98.0%',
-    derivation: `TP 147 ÷ (TP 147 + FN 3) = 98.0%. 150 frauds were planted; 147 were caught. This is an upper bound — the simulator plants types the detectors were built to find.` },
-  { id: 'f1', label: 'F1', value: F1, display: '92.5%',
-    derivation: '2 × (0.875 × 0.980) ÷ (0.875 + 0.980) = 92.5%.' },
+    derivation: `TP 148 ÷ (TP 148 + FP 16) = 90.2%. Measured by running the engine blind against 150 planted frauds; reproduce with \`${EVAL_CORPUS.command}\`.` },
+  { id: 'recall', label: 'Recall', value: RECALL, display: '98.7%',
+    derivation: `TP 148 ÷ (TP 148 + FN 2) = 98.7%. 150 frauds were planted; 148 were caught. This is an upper bound — the simulator plants types the detectors were built to find.` },
+  { id: 'f1', label: 'F1', value: F1, display: '90.2%',
+    derivation: '2 × (0.902 × 0.987) ÷ (0.902 + 0.987) = 94.3%.' },
   { id: 'phi', label: 'Procurement Health Index', value: 62, display: '62 / 100',
     derivation: 'Weighted across the five pillars: duplicates 18/25, price 11/20, behaviour 12/25, integrity 13/20, compliance 8/10 → 62.' },
 ]

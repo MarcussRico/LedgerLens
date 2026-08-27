@@ -59,6 +59,42 @@ ITEMS = [
      ["SITE MAINTENANCE MONTHLY", "Housekeeping services plant", "Facility upkeep monthly"]),
     ("MS Angle 50x50x6mm", "kg", "7216", 58.2,
      ["MS ANGLE 50X50X6", "Mild steel angle 50mm", "ANGLE-MS-50"]),
+    # A real book carries thousands of line items across a few vendors each.
+    # With only a handful, every SKU ends up supplied by twenty vendors and the
+    # consolidation detector fires on all of them — an artefact of the corpus,
+    # not a finding about the client.
+    ("Ballpoint Pen Blue 0.7mm", "nos", "9608", 5.4,
+     ["PEN BALL BLUE 0.7", "Blue ball pen", "B/P PEN BLU"]),
+    ("Toner Cartridge 12A", "nos", "8443", 4_180.0,
+     ["TONER 12A", "Cartridge toner 12A compatible", "TNR-12A"]),
+    ("Safety Helmet ISI", "nos", "6506", 310.0,
+     ["HELMET SAFETY ISI", "Industrial safety helmet", "PPE-HELMET"]),
+    ("Cotton Hand Gloves", "pair", "6116", 42.0,
+     ["GLOVES COTTON", "Hand gloves cotton pair", "PPE-GLV-CTN"]),
+    ("Stretch Wrap Film 23 micron", "roll", "3920", 1_240.0,
+     ["STRETCH FILM 23MIC", "Pallet wrap 23 micron", "LLDPE wrap film"]),
+    ("Diesel Generator Service", "visit", "9987", 8_600.0,
+     ["DG SET SERVICE VISIT", "Generator servicing call", "DG-PM-VISIT"]),
+    ("HVAC Preventive Maintenance", "visit", "9987", 14_500.0,
+     ["AC PM VISIT", "HVAC preventive maint", "Aircon servicing"]),
+    ("Courier Consignment under 5kg", "nos", "9968", 185.0,
+     ["COURIER <5KG", "Courier docket upto 5 kg", "CRR-5KG"]),
+    ("FTL Madurai to Chennai", "trip", "9965", 21_400.0,
+     ["FTL MDU-MAA", "Truck full load Madurai Chennai", "TRANSPORT MDU>CHN"]),
+    ("HR Coil 2.5mm", "kg", "7208", 54.8,
+     ["HR COIL 2.5MM", "Hot rolled coil 2.5", "HRC-2.5"]),
+    ("Network Switch 24-port", "nos", "8517", 27_600.0,
+     ["SWITCH 24P GIG MANAGED", "24 port gigabit switch", "24-PORT L2 SWITCH"]),
+    ("UPS 1 kVA Line Interactive", "nos", "8504", 6_900.0,
+     ["UPS 1KVA", "Uninterruptible power supply 1kva", "UPS-1K-LI"]),
+    ("Statutory Compliance Retainer", "month", "9982", 1_45_000.0,
+     ["COMPLIANCE RETAINER MONTHLY", "Professional retainer compliance", "ADVISORY RETAINER"]),
+    ("Housekeeping Consumables Kit", "nos", "3402", 1_950.0,
+     ["HK CONSUMABLES KIT", "Housekeeping consumable set", "HK-KIT"]),
+    ("Copper Cable 4 sq mm FRLS", "m", "8544", 73.2,
+     ["CABLE CU 4SQMM FRLS", "Copper wire 4 sq.mm FRLS", "CU-CBL-4SQMM"]),
+    ("Industrial Paint Enamel 20L", "nos", "3208", 4_450.0,
+     ["PAINT ENAMEL 20L", "Enamel paint 20 litre", "PNT-ENML-20"]),
 ]
 # Approvers and requisitioners must be disjoint pools. Drawing both from one
 # small list made ~16% of the "clean" baseline self-approved, so CMP-006
@@ -132,7 +168,14 @@ def generate(
     span = (end - start).days
 
     def rdate() -> date:
-        return start + timedelta(days=rng.randint(0, span))
+        """Weekday-biased, like a real procurement calendar. A uniform draw put
+        29% of documents on a Saturday or Sunday, which the weekend detector
+        correctly called anomalous — the data was wrong, not the rule."""
+        for _ in range(6):
+            d = start + timedelta(days=rng.randint(0, span))
+            if d.weekday() < 5 or rng.random() < 0.04:   # ~4% genuine weekend work
+                return d
+        return d
 
     # ── vendors ───────────────────────────────────────────────────────────
     vendors: list[dict] = []

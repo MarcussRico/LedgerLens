@@ -47,6 +47,25 @@ class AnalysisConfig(BaseModel):
     benford_alpha: float = 0.01
     year_end_multiple: float = 2.0
 
+    # ── how much of a modelled opportunity is actually realisable ─────────
+    #: Not all volume can move. Contracts run, lead times bind, specs are
+    #: qualified to a supplier. Claiming the whole book could shift to the
+    #: cheapest price ever seen is a ceiling, not a saving.
+    switchable_volume_share: float = 0.35
+    #: Benchmark against the lower quartile of peer prices rather than the
+    #: single minimum. One cheap invoice is not a price you can buy at.
+    counterfactual_percentile: float = 0.25
+    #: An opportunity below this is not worth a procurement manager's morning.
+    #: Without a floor, the counterfactual and consolidation detectors fire on
+    #: every SKU with three suppliers and bury the findings that matter.
+    opportunity_min_value: float = 25_000.0
+    #: …and it must also be a meaningful share of that item's own spend.
+    opportunity_min_share: float = 0.03
+
+    #: Total savings above this share of spend are implausible on their face and
+    #: are surfaced as a warning rather than presented as a clean claim.
+    savings_plausibility_ceiling: float = 0.05
+
     # ── vendor-ring link evidence ─────────────────────────────────────────
     #: How discriminating each shared attribute is. Two vendors paid into one
     #: bank account are, for payment purposes, one payee — that is close to

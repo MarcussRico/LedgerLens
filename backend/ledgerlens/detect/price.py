@@ -51,6 +51,9 @@ class PriceBenchmark:
                 dev = row["price"] / median - 1
                 if dev <= cfg.price_deviation_min:
                     continue
+                # No materiality floor here: PRC-001 detects overcharging, it
+                # does not propose an opportunity. A small overcharge is still
+                # an overcharge, and gating it cost real detections.
                 exposure = (row["price"] - median) * row["qty"]
                 if exposure <= 0:
                     continue
@@ -240,27 +243,42 @@ class BestPriceCounterfactual:
             by_vendor = grp.groupby("vendor_id")["_price"].median()
             if len(by_vendor) < ctx.config.price_min_peers:
                 continue
-            best = float(by_vendor.min())
+            cfg = ctx.config
+            # the lower quartile, not the minimum: one cheap invoice is not a
+            # price anyone can actually buy at
+            target = float(by_vendor.quantile(cfg.counterfactual_percentile))
             best_vendor = by_vendor.idxmin()
             total_qty = float(grp["_qty"].sum())
+            # and only the share of volume that is genuinely free to move
+            switchable = total_qty * cfg.switchable_volume_share
+            actual_rate = float((grp["_price"] * grp["_qty"]).sum() / total_qty) if total_qty else 0.0
+            saving = (actual_rate - target) * switchable
             actual = float((grp["_price"] * grp["_qty"]).sum())
-            counterfactual = best * total_qty
-            saving = actual - counterfactual
+            counterfactual = actual - saving
             if saving <= 0 or total_qty <= 0:
                 continue
+            if (saving < cfg.opportunity_min_value
+                    or (actual and saving / actual < cfg.opportunity_min_share)):
+                continue                      # immaterial: not worth surfacing
             out.append(make(
                 "PRC-004", key=(str(sku),),
                 entities=Entities(sku_ids=[str(sku)], vendor_id=str(best_vendor)),
-                evidence={"sku_id": str(sku), "best_unit_price": round(best, 2),
-                          "best_vendor": str(best_vendor), "total_volume": round(total_qty, 2),
+                evidence={"sku_id": str(sku), "target_unit_price": round(target, 2),
+                          "percentile_used": cfg.counterfactual_percentile,
+                          "cheapest_vendor": str(best_vendor),
+                          "blended_rate_paid": round(actual_rate, 2),
+                          "total_volume": round(total_qty, 2),
+                          "switchable_volume": round(switchable, 2),
+                          "switchable_share": cfg.switchable_volume_share,
                           "actual_spend": round(actual, 2),
-                          "counterfactual_spend": round(counterfactual, 2),
-                          "arithmetic": f"{actual:.2f} − ({best:.2f} × {total_qty:.2f}) = {saving:.2f}"},
+                          "arithmetic": (f"({actual_rate:.2f} − {target:.2f}) × "
+                                         f"{switchable:.2f} switchable units = {saving:.2f}")},
                 money=saving, confidence=0.6,
                 explanation=(
-                    f"The same resolved item was bought at several prices. Consolidating the "
-                    f"whole {total_qty:.0f}-unit volume at the best observed rate of "
-                    f"{inr(best)} would have cost {inr(saving)} less."
+                    f"The same resolved item was bought at a blended {inr(actual_rate)} per unit. "
+                    f"Moving the {cfg.switchable_volume_share:.0%} of volume that is realistically "
+                    f"free to switch onto the lower-quartile rate of {inr(target)} models "
+                    f"{inr(saving)}. Not all volume can move — contracts run and specs are qualified."
                 ),
                 action=Action(kind="consolidate", label="Consolidate onto the best rate",
                               detail=f"Modelled, not contracted: {inr(saving)} at current volumes."),
@@ -283,10 +301,16 @@ class Consolidation:
             spend = float((grp["_price"] * grp["_qty"]).sum())
             if spend <= 0:
                 continue
-            blended = spend / float(grp["_qty"].sum())
-            target = float(grp.groupby("vendor_id")["_price"].median().quantile(0.25))
-            saving = (blended - target) * float(grp["_qty"].sum())
+            cfg = ctx.config
+            qty = float(grp["_qty"].sum())
+            blended = spend / qty if qty else 0.0
+            target = float(grp.groupby("vendor_id")["_price"].median()
+                              .quantile(cfg.counterfactual_percentile))
+            saving = (blended - target) * qty * cfg.switchable_volume_share
             if saving <= 0:
+                continue
+            if (saving < cfg.opportunity_min_value
+                    or saving / spend < cfg.opportunity_min_share):
                 continue
             out.append(make(
                 "PRC-006", key=(str(sku),),
@@ -294,12 +318,14 @@ class Consolidation:
                 evidence={"sku_id": str(sku), "vendors_supplying": int(vendors),
                           "blended_rate": round(blended, 2),
                           "lower_quartile_rate": round(target, 2),
-                          "annual_spend": round(spend, 2)},
+                          "annual_spend": round(spend, 2),
+                          "switchable_share": cfg.switchable_volume_share},
                 money=saving, confidence=0.55,
                 explanation=(
                     f"{vendors} vendors supply this one resolved item at a blended "
                     f"{inr(blended)} per unit. Consolidating to the lower-quartile rate of "
-                    f"{inr(target)} models a saving of {inr(saving)}."
+                    f"{inr(target)} models {inr(saving)} on the "
+                    f"{cfg.switchable_volume_share:.0%} of volume free to move."
                 ),
                 action=Action(kind="consolidate", label="Run a single tender for this item",
                               detail="Modelled on current volumes; not a contracted price."),
@@ -410,6 +436,8 @@ class LeadTimeCost:
                 continue
             # working capital tied up for the extra wait, at 9% p.a.
             carry = spend * 0.09 * (excess / 365)
+            if carry < ctx.config.opportunity_min_value:
+                continue
             out.append(make(
                 "PRC-009", key=(str(vendor),),
                 entities=Entities(vendor_id=str(vendor)),

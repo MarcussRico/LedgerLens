@@ -21,8 +21,8 @@ Generates a seeded corpus with 150 labelled frauds, runs all 42 detectors blind,
 and scores them. Latest measured run:
 
 ```
-TP 147   FP 12   FN 3   TN 1384
-precision 92.5%   recall 98.0%   F1 95.1%
+TP 148   FP 16   FN 2   TN 1405
+precision 90.2%   recall 98.7%   F1 94.3%
 ```
 
 Savings opportunities (consolidation, best-price counterfactual, tail spend,

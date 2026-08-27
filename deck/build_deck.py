@@ -195,7 +195,7 @@ RX = 9.05
 vline(s, RX - 0.42, 1.44, 3.9, LINE, 0.9)
 facts = [("5,847", "invoices analysed"), ("1,203", "purchase orders"),
          ("118", "vendors · 96 resolved entities"), ("42", "detectors across 5 pillars"),
-         ("163", "findings, every one traceable"), ("92.5%", "precision on planted ground truth")]
+         ("163", "findings, every one traceable"), ("90.2%", "precision on planted ground truth")]
 yy = 1.44
 for v, k in facts:
     text(s, RX, yy, 3.4, 0.34, v, size=19, font=MONO, color=PAPER)
@@ -310,15 +310,15 @@ text(s, M + 0.3, 6.68, 11.3, 0.28,
 s = new_slide(3, "Features", "Forty-two detectors. Seven working views. One evidence trail.")
 
 pillars = [
-    ("01", "Duplicates &\nOverpayment", 8, 41, 0.947, GOLD,
+    ("01", "Duplicates &\nOverpayment", 8, 41, 0.914, GOLD,
      "near-duplicate matching\ntransposition-tolerant numbers\ncross-alias duplicates"),
-    ("02", "Price & Vendor\nIntelligence", 9, 38, 0.971, SLATE,
+    ("02", "Price & Vendor\nIntelligence", 9, 38, 0.938, SLATE,
      "peer-median benchmarking\nprice-creep regression\nrate-card violation"),
-    ("03", "Behavioural\nAnomalies", 11, 47, 0.915, SIGNAL,
+    ("03", "Behavioural\nAnomalies", 11, 47, 0.956, SIGNAL,
      "PO splitting · threshold hugging\nBenford's Law\nIsolation Forest outliers"),
     ("04", "Vendor Integrity\n& Collusion", 8, 22, 1.000, CLAY,
      "shared-attribute rings\nvendor ↔ employee links\nbank change before payment"),
-    ("05", "Compliance\n& Process", 6, 15, 0.978, VERIFY,
+    ("05", "Compliance\n& Process", 6, 15, 0.979, VERIFY,
      "three-way match\nduplicate GST numbering\nMSME 45-day breach, s.43B(h)"),
 ]
 x, CW = M, 2.28
@@ -529,7 +529,7 @@ rows = [("Unit of analysis", "one record at a time",
         ("Risk score", "one opaque weighted sum",
          "five decomposable pillars, live weights, every point traced to a rule", False),
         ("Accuracy claim", "none possible",
-         "92.5% precision / 98.0% recall against 150 planted frauds — measured, "
+         "90.2% precision / 98.7% recall against 150 planted frauds — measured, "
          "not asserted", True),
         ("Role of the LLM", "asked to judge the data",
          "forbidden from arithmetic — language only", False),
@@ -635,7 +635,7 @@ for i, (nm, val, col) in enumerate(stages):
 RX5 = M + 7.9
 vline(s, RX5 - 0.3, BODY_TOP, 4.6, LINE, 0.9)
 text(s, RX5, BODY_TOP, 4.0, 0.26, " ".join("MEASURED, NOT ASSERTED"), size=8.5, font=MONO, color=MUTED)
-mets = [("92.5%", "precision"), ("98.0%", "recall"), ("95.1%", "F1")]
+mets = [("90.2%", "precision"), ("98.7%", "recall"), ("94.3%", "F1")]
 mx = RX5
 for v, k in mets:
     rect(s, mx, BODY_TOP + 0.32, 1.24, 0.78, PANEL, LINE, 0.8)
@@ -643,17 +643,17 @@ for v, k in mets:
     text(s, mx, BODY_TOP + 0.80, 1.24, 0.24, k, size=8, font=MONO, color=MUTED, align=PP_ALIGN.CENTER)
     mx += 1.32
 text(s, RX5, BODY_TOP + 1.20, 4.0, 0.60,
-     "TP 147 · FP 12 · FN 3 · TN 1,384\n"
-     "TP 147 + FN 3 = the 150 frauds we planted.\n"
+     "TP 148 · FP 16 · FN 2 · TN 1,405\n"
+     "TP 148 + FN 2 = the 150 frauds we planted.\n"
      "python -m ledgerlens.eval.run",
      size=8.5, font=MONO, color=PAPER_DIM, spacing=1.34)
 
 rect(s, RX5, BODY_TOP + 1.78, 4.0, 0.92, None, SIGNAL_DIM, 1.0)
 text(s, RX5 + 0.16, BODY_TOP + 1.90, 3.7, 0.26, "Where we are weakest", size=9.5, color=SIGNAL)
 text(s, RX5 + 0.16, BODY_TOP + 2.16, 3.7, 0.62,
-     "We catch 15 of 18 planted price-gouging cases. The misses sit just above the peer "
-     "median where barely three vendors are comparable. Lowering the threshold would catch "
-     "them and flag ordinary variation as fraud, which is worse.",
+     "Duplicates is our least precise pillar at 91.4%. Its transposition rule compares invoice "
+     "numbers within an edit distance of two, and some genuinely distinct documents differ by "
+     "that little. Both numbers are shown side by side, so a reviewer dismisses it in seconds.",
      size=8.5, color=PAPER_DIM, spacing=1.3)
 
 text(s, RX5, BODY_TOP + 2.80, 4.0, 0.26, " ".join("FUTURE SCOPE"), size=8.5, font=MONO, color=GOLD)
@@ -678,7 +678,7 @@ text(s, M, 2.15, 10.6, 1.9,
      size=40, font=DISPLAY, color=PAPER, spacing=1.06)
 hline(s, M, 4.5, W - 2 * M, LINE, 0.9)
 cols = [("₹18,42,650", "recoverable, identified", GOLD),
-        ("92.5% / 98.0%", "precision / recall, measured", VERIFY),
+        ("90.2% / 98.7%", "precision / recall, measured", VERIFY),
         ("42", "detectors, 5 pillars", PAPER),
         ("0", "numbers written by a language model", SIGNAL)]
 x = M

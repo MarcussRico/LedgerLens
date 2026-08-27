@@ -14,7 +14,7 @@ export interface PillarSpec {
 
 export const pillars: PillarSpec[] = [
   {
-    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.947, findings: 41,
+    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.914, findings: 41,
     blurb: 'The largest category of leakage, and almost never fraud. Somebody re-sent an invoice and both copies got paid.',
     detectors: [
       { id: 'DUP-002', name: 'Near-duplicate matching', flagship: true, note: 'Same vendor · amount within ±1% · date within 7 days · different invoice number.' },
@@ -28,7 +28,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 2, key: 'price', pillar: 'Price & Vendor Intelligence', accent: 'slate', precision: 0.971, findings: 38,
+    n: 2, key: 'price', pillar: 'Price & Vendor Intelligence', accent: 'slate', precision: 0.938, findings: 38,
     blurb: 'You cannot compare a price until you know two documents are describing the same thing. Resolution comes first.',
     detectors: [
       { id: 'PRC-001', name: 'Unit-price benchmarking across vendors', flagship: true, note: 'Runs after SKU normalisation. Peer median per SKU, deviation in rupees and percent.' },
@@ -43,7 +43,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.915, findings: 47,
+    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.956, findings: 47,
     blurb: 'No single transaction is wrong. The shape of the distribution is wrong.',
     detectors: [
       { id: 'BEH-001', name: 'PO splitting', flagship: true, note: 'n orders · one vendor · one approval window · each sitting below the sign-off threshold.' },
@@ -74,7 +74,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 5, key: 'comp', pillar: 'Compliance & Process', accent: 'verify', precision: 0.978, findings: 15,
+    n: 5, key: 'comp', pillar: 'Compliance & Process', accent: 'verify', precision: 0.979, findings: 15,
     blurb: 'India-specific, statutory, and unarguable. These findings do not require anyone to agree with a model.',
     detectors: [
       { id: 'CMP-001', name: 'Three-way match', flagship: true, note: 'PO ↔ GRN ↔ Invoice reconciled on quantity, unit price and payment terms.' },
