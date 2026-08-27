@@ -51,7 +51,7 @@ export function RiskStudio() {
   const partTotal = selected.parts.reduce((s, p) => s + p.pts, 0) || 1
 
   return (
-    <div className="grid grid-cols-12 gap-4">
+    <div className="grid grid-cols-12 items-start gap-4">
       <div className="col-span-12 lg:col-span-4">
         <Panel title="Pillar weights" note="move a slider — the leaderboard reorders live"
           right={

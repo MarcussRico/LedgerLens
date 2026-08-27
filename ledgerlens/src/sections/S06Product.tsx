@@ -51,7 +51,8 @@ export function S06Product() {
 
       <Reveal delay={0.06}>
         <div className="mt-10 px-[max(0px,calc((100vw-1720px)/2))]">
-          <div id="app-chrome" className="mx-3 border border-[var(--color-line)] bg-[var(--color-ink)] sm:mx-5">
+          <div id="app-chrome"
+            className="mx-3 overflow-hidden border border-[var(--color-line)] bg-[var(--color-ink)] sm:mx-5">
             {/* title bar */}
             <div className="flex min-w-0 items-center gap-3 overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-panel)] px-4 py-2.5">
               <div className="flex shrink-0 gap-1.5" aria-hidden>

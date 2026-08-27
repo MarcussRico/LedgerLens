@@ -91,7 +91,7 @@ export function VendorGraph() {
   const ringSpend = vendors.filter((v) => ['V-001', 'V-002', 'V-003', 'V-004', 'V-005'].includes(v.id)).reduce((s, v) => s + v.spend, 0)
 
   return (
-    <div className="grid grid-cols-12 gap-4">
+    <div className="grid grid-cols-12 items-start gap-4">
       <div className="col-span-12 xl:col-span-8">
         <Panel title="Vendor integrity graph" note="vendors · employees · bank accounts · addresses, joined on resolved attributes">
           <div ref={ref} className="p-2">

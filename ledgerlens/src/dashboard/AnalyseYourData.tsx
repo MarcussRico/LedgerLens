@@ -318,9 +318,13 @@ export function AnalyseYourData() {
         )}
       </div>
 
-      <div className="grid grid-cols-12 gap-4">
+      {/* items-start matters: Panel carries h-full, so a stretched grid row
+          makes every stacked panel claim the full row height and the column
+          overflows its section. Sizing the cell to content breaks that. */}
+      <div className="grid grid-cols-12 items-start gap-4">
         {/* ── input ── */}
-        <div className="col-span-12 lg:col-span-5">
+        {/* the results run long; keep the controls in reach while reading them */}
+        <div className="col-span-12 lg:sticky lg:top-20 lg:col-span-5">
           <Panel title="Your data" note="CSV or Excel · nothing is stored server-side">
             <div className="p-4">
               <div
