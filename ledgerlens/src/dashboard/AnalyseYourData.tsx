@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Upload, FileSpreadsheet, X, Play, AlertTriangle, CircleCheck, Loader2,
-  Sparkle, Download, ChevronDown, FileDown,
+  Sparkle, Download, ChevronDown, FileDown, Fingerprint,
 } from 'lucide-react'
 import { Panel } from './shell'
 import { Chip } from '../components/ui/primitives'
@@ -228,6 +228,89 @@ function SavingsPanel({ result }: { result: AnalyseResponse }) {
           <p className="mt-1 text-[0.625rem] leading-relaxed text-[var(--color-muted)]">{t.derivation}</p>
         </div>
       ))}
+    </Panel>
+  )
+}
+
+/* ── finding zero: is the ledger itself credible? ─────────────────────── */
+function IntegrityPanel({ result }: { result: AnalyseResponse }) {
+  const di = result.dataIntegrity
+  if (!di) return null
+  const colour = di.score >= 85 ? 'var(--color-verify)'
+    : di.score >= 70 ? 'var(--color-gold)'
+    : di.score >= 50 ? 'var(--color-clay)' : 'var(--color-signal)'
+  const usable = di.checks.filter((c) => c.applicable && c.weight > 0)
+  return (
+    <Panel title="Finding zero — is this ledger credible?"
+      note="graded before anything in it is interpreted">
+      <div className="flex flex-wrap items-start gap-5 border-b border-[var(--color-line)] px-4 py-4">
+        <div className="shrink-0">
+          <p className="num text-[2.75rem] leading-none" style={{ color: colour }}>
+            {di.score}<span className="text-[0.4em] text-[var(--color-muted)]">/100</span>
+          </p>
+          <p className="mt-1 font-mono text-[0.5625rem] uppercase tracking-[0.1em]" style={{ color: colour }}>
+            {di.band}
+          </p>
+        </div>
+        <p className="min-w-[16rem] flex-1 text-[0.8125rem] leading-relaxed text-[var(--color-paper-dim)]">
+          {di.headline}
+        </p>
+      </div>
+      <ul className="divide-y divide-[var(--color-line-soft)]">
+        {usable.map((c) => (
+          <li key={c.name} className="px-4 py-2.5">
+            <div className="flex items-center gap-3">
+              <span className="w-52 shrink-0 truncate text-[0.75rem] text-[var(--color-paper)]">{c.name}</span>
+              <span className="h-[3px] flex-1 bg-[var(--color-panel-2)]">
+                <span className="block h-full" style={{
+                  width: `${Math.round(c.score * 100)}%`,
+                  background: c.score >= 0.7 ? 'var(--color-verify)'
+                    : c.score >= 0.4 ? 'var(--color-gold)' : 'var(--color-signal)',
+                }} />
+              </span>
+              <span className="num w-9 shrink-0 text-right text-[0.6875rem] text-[var(--color-paper-dim)]">
+                {c.score.toFixed(2)}
+              </span>
+            </div>
+            <p className="mt-1 pl-0 text-[0.625rem] leading-relaxed text-[var(--color-muted)] sm:pl-[13.5rem]">
+              <span className="num text-[var(--color-paper-dim)]">{c.observed}</span>
+              {' · expected '}{c.expected}. {c.verdict}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <p className="border-t border-[var(--color-line)] px-4 py-2.5 text-[0.6875rem] leading-relaxed text-[var(--color-paper-dim)]">
+        Every test here is a mathematical invariant — it holds for genuine accounting data whatever the
+        business does, so none of it needs to trust the client&rsquo;s own history. If a ledger fails these,
+        read everything below it in that light.
+      </p>
+    </Panel>
+  )
+}
+
+/* ── the receipt ──────────────────────────────────────────────────────── */
+function AuditPanel({ result }: { result: AnalyseResponse }) {
+  const a = result.audit
+  if (!a) return null
+  return (
+    <Panel title="Audit trail" note={`${a.algorithm} · ${a.version}`}>
+      <div className="space-y-2.5 px-4 py-3.5">
+        <div>
+          <p className="kicker mb-1 flex items-center gap-1.5">
+            <Fingerprint className="size-3" strokeWidth={1.5} aria-hidden /> Run root
+          </p>
+          <p className="num break-all text-[0.6875rem] leading-relaxed text-[var(--color-verify)]">{a.root}</p>
+        </div>
+        <div>
+          <p className="kicker mb-1">Corpus fingerprint</p>
+          <p className="num break-all text-[0.625rem] leading-relaxed text-[var(--color-paper-dim)]">
+            {a.corpusFingerprint}
+          </p>
+        </div>
+        <p className="border-t border-[var(--color-line)] pt-2.5 text-[0.6875rem] leading-relaxed text-[var(--color-muted)]">
+          {a.findings} findings hashed over their own content and chained in a fixed order. {a.note}
+        </p>
+      </div>
     </Panel>
   )
 }
@@ -510,6 +593,7 @@ export function AnalyseYourData() {
                 </div>
               )}
 
+              <IntegrityPanel result={result} />
               <MappingReport result={result} />
               <ResolutionReport result={result} />
               {result.findings.length > 0
@@ -526,6 +610,7 @@ export function AnalyseYourData() {
                   </Panel>
                 )}
               <SavingsPanel result={result} />
+              <AuditPanel result={result} />
               <p className="px-1 text-[0.625rem] leading-relaxed text-[var(--color-muted)]">
                 {result.meta.note} The model was used {result.meta.llmUsedForMapping ? '' : 'not '}
                 for column mapping on this run, and for nothing else.

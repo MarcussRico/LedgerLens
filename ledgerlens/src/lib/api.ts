@@ -57,6 +57,34 @@ export interface ApiFinding {
   detectedAt: string | null
 }
 
+export interface IntegrityCheck {
+  name: string
+  score: number
+  weight: number
+  observed: string
+  expected: string
+  verdict: string
+  applicable: boolean
+}
+
+export interface DataIntegrity {
+  score: number
+  band: string
+  headline: string
+  sampleSize: number
+  checks: IntegrityCheck[]
+}
+
+export interface AuditTrail {
+  version: string
+  algorithm: string
+  corpusFingerprint: string
+  root: string
+  findings: number
+  note: string
+  chain?: { findingId: string; ruleId: string; contentHash: string; link: string }[]
+}
+
 export interface AnalyseResponse {
   meta: {
     client: string
@@ -90,6 +118,8 @@ export interface AnalyseResponse {
     spendAnalysed: number
     spendDisplay: string
   }
+  dataIntegrity: DataIntegrity
+  audit: AuditTrail
   findings: ApiFinding[]
   savings: {
     tiers: {

@@ -43,6 +43,42 @@ recall measured this way is an upper bound. It demonstrates the detectors work
 on the patterns they target; it does not prove coverage of patterns nobody
 thought of. Precision is the more trustworthy half of this measurement.
 
+## Scale
+
+Near-linear, measured end to end on one Railway container:
+
+| Invoices | POs | Ingest + resolve | Detect | Total | Findings |
+|---|---|---|---|---|---|
+| 1,121 | 1,016 | 0.06s | 1.11s | **1.17s** | 109 |
+| 5,121 | 5,017 | 0.09s | 1.65s | **1.74s** | 232 |
+| 20,121 | 20,017 | 0.22s | 4.95s | **5.17s** | 953 |
+| 50,121 | 50,016 | 0.48s | 12.00s | **12.48s** | 2,468 |
+
+About 4,000 documents a second. The engine is not the bottleneck; getting the
+data out of the ERP is.
+
+## Finding zero — the Data Integrity Score
+
+Before interpreting anything in a ledger, grade whether the ledger behaves like
+real accounting data: Benford first and second digit, round-number rate,
+terminal-digit uniformity, filing-time entropy, identifier integrity. Each is a
+mathematical invariant that holds whatever the business does, so none of it
+needs to trust the client's history — which is also why they all survive
+`zero_trust`.
+
+The bundled sample scores **72/100**. That is not a flattering number and it is
+not meant to be: the planted frauds park amounts just under ₹50,000, which bends
+the first-digit distribution exactly as the check says it does.
+
+A grade is withheld rather than guessed when the file is too small to test.
+
+## Audit trail
+
+Every finding is hashed over its own content, the hashes are chained in a fixed
+order, and the run reduces to a single root. Re-run the same files and the root
+is identical; change one rupee and it is not. The corpus fingerprint identifies
+the input by row counts and column sums without retaining any of it.
+
 ## Layout
 
 ```

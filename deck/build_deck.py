@@ -356,9 +356,9 @@ for i, (nm, sub) in enumerate(views):
 
 # the differentiating features, stated as capabilities not adjectives
 FY = VY + 1.28
-feats = [("Evidence, not alerts", "every finding opens the two source documents with matching and differing fields highlighted"),
-         ("Drafted artifacts", "recovery email, commercial-review letter or audit-committee memo, typed from the finding"),
-         ("Natural language + visible SQL", "the query is shown beneath the answer, so nothing can be hallucinated"),
+feats = [("Finding zero: is the ledger real?", "Benford, round-number rate, terminal-digit uniformity and filing-time entropy grade the books before anything in them is believed"),
+         ("Evidence, not alerts", "every finding opens the two source documents with matching and differing fields highlighted"),
+         ("Tamper-evident by construction", "each finding hashed over its own content and chained to a run root; re-run and the root is identical"),
          ("India compliance layer", "GSTIN format, duplicate GST numbering under Rule 46(b), HSN tax match, MSME s.43B(h)")]
 x = M
 for nm, sub in feats:
@@ -506,7 +506,13 @@ text(s, RX3, BODY_TOP + 3.10, 2.98, 0.9,
      "and demonstrate it before the session ends.",
      size=8, color=MUTED, spacing=1.34)
 
-text(s, M, 6.42, 11.9, 0.3,
+text(s, M, 6.12, 11.9, 0.3,
+     [[("50,121 invoices in 12.5 seconds", {"color": GOLD}),
+       ("  ·  ~4,000 documents a second, near-linear from 1,000 to 50,000. "
+        "The engine is not the bottleneck; getting the data out of the ERP is.",
+        {"color": PAPER_DIM})]],
+     size=10)
+text(s, M, 6.46, 11.9, 0.3,
      [[("The demo runs fully offline. ", {"color": PAPER}),
        ("Bundled client-side, seeded, byte-identical on every reload — it cannot fail on "
         "venue wifi. The engine is live; only the \u2018analyse your own data\u2019 panel calls it.",

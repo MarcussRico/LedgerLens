@@ -22,7 +22,9 @@ from ledgerlens.api.serialise import camelise, finding_to_dict
 from ledgerlens.config import AnalysisConfig
 from ledgerlens.detect._helpers import inr
 from ledgerlens.pipeline import KINDS, SourceFile, build_context
+from ledgerlens.audit import build_trail
 from ledgerlens.savings.model import build_savings
+from ledgerlens.score.integrity import assess as assess_integrity
 from ledgerlens.score.prs import health_index, score_all_vendors
 
 logging.basicConfig(level=logging.INFO)
@@ -150,9 +152,12 @@ async def analyse(
         log.exception("ingest failed")
         raise HTTPException(422, f"could not read these files: {exc}") from exc
 
+    # Grade the ledger before interpreting anything found in it.
+    integrity = assess_integrity(ctx)
     findings = registry.run_all(ctx)
     savings = build_savings(findings, ctx.total_spend,
                             ceiling=config.savings_plausibility_ceiling)
+    trail = build_trail(findings, ctx)
     vendor_scores = score_all_vendors(findings, ctx)
     phi = health_index(findings, ctx)
     elapsed = time.perf_counter() - started
@@ -183,6 +188,8 @@ async def analyse(
             "spendAnalysed": round(ctx.total_spend, 2),
             "spendDisplay": inr(ctx.total_spend),
         },
+        "dataIntegrity": camelise(integrity.as_dict()),
+        "audit": trail.as_dict(),
         "findings": [finding_to_dict(f) for f in findings],
         "savings": camelise(savings.as_dict()),
         "riskScores": [camelise(s.as_dict()) for s in vendor_scores[:50]],

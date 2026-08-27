@@ -10,6 +10,7 @@ ground truth, so an accuracy number is reproducible by anyone who runs it.
 """
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, field
 from datetime import date, timedelta
@@ -287,10 +288,16 @@ def generate(
         })
 
     # ── clean baseline ────────────────────────────────────────────────────
+    def spend_amount() -> float:
+        """Log-uniform, because real procurement spend is. A uniform draw gives
+        a first-digit distribution nothing like Benford's, and the data
+        integrity check correctly graded the corpus as manufactured."""
+        return round(math.exp(rng.uniform(math.log(4_000), math.log(6_00_000))), 2)
+
     for _ in range(n_invoices):
         v = rng.choice(vendors)["vendor_id"]
         when = rdate()
-        amount = round(rng.uniform(4_000, 6_00_000), 2)
+        amount = spend_amount()
         po = new_po(v, when - timedelta(days=rng.randint(3, 25)), amount)
         rec = new_invoice(v, when, amount, po_id=po["po_id"])
         add_lines(rec["invoice_id"], v, when)
