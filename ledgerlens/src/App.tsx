@@ -9,6 +9,7 @@ import { S02Stakes } from './sections/S02Stakes'
 import { S04Ways } from './sections/S04Ways'
 import { S05Root } from './sections/S05Root'
 import { PresenterNotes } from './components/PresenterNotes'
+import { Footer } from './components/Footer'
 import { useInjection, InjectionRig } from './components/Injection'
 
 const S03Pipeline = lazy(() => import('./sections/S03Pipeline').then((m) => ({ default: m.S03Pipeline })))
@@ -94,6 +95,8 @@ function Shell() {
         <Suspense fallback={<Hold label="11 — Impact" />}><S11Impact /></Suspense>
         <Suspense fallback={<Hold label="12 — Coverage and close" />}><S12Close /></Suspense>
       </main>
+
+      <Footer />
     </>
   )
 }

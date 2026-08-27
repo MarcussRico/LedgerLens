@@ -239,3 +239,77 @@ export function sampleVendorsCsv(): string {
     'V-013,Thangam Electricals,33AABCT7890J1Z1,AABCT7890J,KVBL-5567,"88 South Gate, Madurai",+91 90000 44444,25/09/2022,Yes',
   ].join('\n')
 }
+
+
+/* ── language-only endpoints ───────────────────────────────────────────────
+   The engine drafts and explains. It is forbidden from arithmetic: every
+   figure in a returned letter was passed in, already computed by a rule. */
+
+export interface DraftRequest {
+  kind: 'recovery-email' | 'audit-memo' | 'commercial-review'
+  vendorName: string
+  ruleId: string
+  moneyAtRisk: number
+  evidence: Record<string, unknown>
+  clientName?: string
+}
+
+export async function draftLetter(req: DraftRequest, timeoutMs = 60_000): Promise<string> {
+  return withTimeout(async (signal) => {
+    let res: Response
+    try {
+      res = await fetch(`${API_BASE}/api/draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: req.kind,
+          vendor_name: req.vendorName,
+          rule_id: req.ruleId,
+          money_at_risk: req.moneyAtRisk,
+          evidence: req.evidence,
+          client_name: req.clientName ?? 'Vaigai Industries Ltd',
+        }),
+        signal,
+      })
+    } catch {
+      throw new ApiError('Could not reach the engine.', undefined,
+        'Falling back to the deterministic template, which is always correct.')
+    }
+    if (!res.ok) {
+      throw new ApiError(`Engine returned ${res.status}`, res.status,
+        res.status === 503 ? 'Drafting needs the language model, which is not configured.' : undefined)
+    }
+    const j = (await res.json()) as { draft: string }
+    return j.draft
+  }, timeoutMs)
+}
+
+export interface ExplainRequest {
+  explanation: string
+  evidence: Record<string, unknown>
+  ruleId: string
+  moneyAtRisk: number
+  vendorName?: string
+  audience?: string
+}
+
+export async function explainFinding(req: ExplainRequest, timeoutMs = 45_000): Promise<string> {
+  return withTimeout(async (signal) => {
+    const res = await fetch(`${API_BASE}/api/explain`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        explanation: req.explanation,
+        evidence: req.evidence,
+        rule_id: req.ruleId,
+        money_at_risk: req.moneyAtRisk,
+        vendor_name: req.vendorName ?? null,
+        audience: req.audience ?? 'finance manager',
+      }),
+      signal,
+    })
+    if (!res.ok) throw new ApiError(`Engine returned ${res.status}`, res.status)
+    const j = (await res.json()) as { explanation: string; source: string }
+    return j.explanation
+  }, timeoutMs)
+}

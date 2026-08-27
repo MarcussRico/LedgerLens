@@ -80,7 +80,7 @@ export const duplicatePairs: DupPair[] = [
     items: [li('SKU-4002', 12, 1_165, 1)] },
 ]
 
-/** The pair the demo opens on, and the one the ⚡ injection re-creates live. */
+/** The pair the demo opens on, and the one the injection re-creates live. */
 export const HERO_PAIR = {
   vendorId: 'V-001',
   amount: 1_24_500,

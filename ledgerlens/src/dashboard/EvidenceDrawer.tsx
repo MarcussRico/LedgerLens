@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { X, FileText, Mail, ShieldAlert, ThumbsDown, ArrowRight } from 'lucide-react'
+import { X, FileText, Mail, ShieldAlert, ThumbsDown, ArrowRight, Wifi, WifiOff, RotateCcw } from 'lucide-react'
 import { animate } from 'animejs'
 import { cn, formatINR, fmtDate, fmtTime, dayOfWeek, groupIN } from '../lib/utils'
 import { Chip } from '../components/ui/primitives'
@@ -12,6 +12,7 @@ import { skuById } from '../data/skus'
 import type { Action, Finding, Invoice } from '../data/types'
 import { useStore } from '../lib/store'
 import { useReducedMotion } from '../lib/hooks'
+import { draftLetter, type DraftRequest } from '../lib/api'
 
 /* ── A document, rendered as a document. Matching fields are tinted verify,
       differing fields gold. This is the most important object on the site. ── */
@@ -260,27 +261,60 @@ function EmailDialog({ finding, open, onOpenChange }: { finding: Finding; open: 
 
   const preRef = useRef<HTMLPreElement | null>(null)
   const [done, setDone] = useState(false)
+  const [source, setSource] = useState<'engine' | 'local' | 'pending'>('pending')
+  const [note, setNote] = useState<string | null>(null)
+  const [text, setText] = useState(body)
+  const [nonce, setNonce] = useState(0)
   const reduced = useReducedMotion()
 
+  /* Ask the live engine to write it. The deterministic template is the
+     fallback and is always correct, so a dead network costs presentation
+     quality, never accuracy. */
   useEffect(() => {
-    if (!open) { setDone(false); return }
+    if (!open) { setDone(false); setSource('pending'); setNote(null); return }
+    let alive = true
+    setSource('pending'); setNote(null); setText(body)
+    const kind: DraftRequest['kind'] =
+      finding.recommendedAction.kind === 'escalate' ? 'audit-memo'
+      : finding.recommendedAction.kind === 'renegotiate'
+        || finding.recommendedAction.kind === 'consolidate' ? 'commercial-review'
+      : 'recovery-email'
+    draftLetter({
+      kind,
+      vendorName: v.name,
+      ruleId: finding.ruleId,
+      moneyAtRisk: finding.moneyAtRisk,
+      evidence: finding.evidence as Record<string, unknown>,
+    })
+      .then((drafted) => { if (alive) { setText(drafted); setSource('engine') } })
+      .catch((err) => {
+        if (!alive) return
+        setSource('local')
+        setNote(err?.hint ?? 'Engine unreachable — using the built-in template.')
+      })
+    return () => { alive = false }
+  }, [open, body, finding, v.name, nonce])
+
+  useEffect(() => {
+    if (!open || source === 'pending') return
     const el = preRef.current
     if (!el) return
-    if (reduced) { el.textContent = body; setDone(true); return }
+    if (reduced) { el.textContent = text; setDone(true); return }
     const state = { i: 0 }
     el.textContent = ''
+    setDone(false)
     const a = animate(state, {
-      i: body.length,
-      duration: body.length * 8,
+      i: text.length,
+      duration: Math.min(text.length * 8, 5200),
       ease: 'linear',
-      onUpdate: () => { if (preRef.current) preRef.current.textContent = body.slice(0, Math.round(state.i)) },
+      onUpdate: () => { if (preRef.current) preRef.current.textContent = text.slice(0, Math.round(state.i)) },
       onComplete: () => setDone(true),
     })
     return () => { a.pause() }
-  }, [open, body, reduced])
+  }, [open, text, source, reduced])
 
   const skip = () => {
-    if (preRef.current) preRef.current.textContent = body
+    if (preRef.current) preRef.current.textContent = text
     setDone(true)
   }
 
@@ -295,8 +329,20 @@ function EmailDialog({ finding, open, onOpenChange }: { finding: Finding; open: 
           <div className="flex items-center justify-between border-b border-[var(--color-line)] px-5 py-3">
             <div>
               <Dialog.Title className="text-sm text-[var(--color-paper)]">{LETTER_LABEL[finding.recommendedAction.kind] ?? 'Drafted correspondence'} — draft</Dialog.Title>
-              <Dialog.Description className="mt-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-[var(--color-muted)]">
-                Language generated · every figure supplied by the rule engine
+              <Dialog.Description className="mt-1 flex flex-wrap items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                {source === 'pending' ? (
+                  <span className="text-[var(--color-slate)]">Asking the engine…</span>
+                ) : source === 'engine' ? (
+                  <span className="inline-flex items-center gap-1.5 text-[var(--color-verify)]">
+                    <Wifi className="size-3" strokeWidth={1.5} aria-hidden /> Written by the live engine
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-[var(--color-gold)]">
+                    <WifiOff className="size-3" strokeWidth={1.5} aria-hidden /> Built-in template
+                  </span>
+                )}
+                <span className="text-[var(--color-line)]">·</span>
+                <span>every figure supplied by the rule engine</span>
               </Dialog.Description>
             </div>
             <Dialog.Close aria-label="Close" className="text-[var(--color-muted)] transition-colors hover:text-[var(--color-paper)]">
@@ -305,10 +351,20 @@ function EmailDialog({ finding, open, onOpenChange }: { finding: Finding; open: 
           </div>
           <pre ref={preRef} className="num min-h-[26rem] whitespace-pre-wrap px-6 py-5 text-[0.8125rem] leading-[1.65] text-[var(--color-paper-dim)]" />
           <div className="flex items-center justify-between gap-3 border-t border-[var(--color-line)] px-5 py-3">
-            <p className="font-mono text-[0.625rem] uppercase tracking-[0.1em] text-[var(--color-muted)]">
-              {done ? 'Draft complete — review before sending' : 'Click anywhere to skip typing'}
+            <p className="min-w-0 flex-1 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-[var(--color-muted)]">
+              {note
+                ? <span className="text-[var(--color-gold)]">{note}</span>
+                : done ? 'Draft complete — review before sending'
+                : source === 'pending' ? 'Waiting on the engine…'
+                : 'Click anywhere to skip typing'}
             </p>
             <div className="flex gap-2">
+              {source === 'local' && (
+                <button type="button" onClick={(e) => { e.stopPropagation(); setNonce((n) => n + 1) }}
+                  className="inline-flex items-center gap-1.5 border border-[var(--color-line)] px-3 py-1.5 text-xs text-[var(--color-paper-dim)] transition-colors hover:text-[var(--color-paper)]">
+                  <RotateCcw className="size-3.5" strokeWidth={1.5} aria-hidden /> Retry engine
+                </button>
+              )}
               <button type="button" onClick={() => onOpenChange(false)}
                 className="border border-[var(--color-line)] px-3 py-1.5 text-xs text-[var(--color-paper-dim)] transition-colors hover:text-[var(--color-paper)]">
                 Discard

@@ -46,7 +46,7 @@ const dupFindings: Finding[] = duplicatePairs.map((p, i) => {
   }
 })
 
-/* ── 2. The live case the ⚡ injection re-creates ── */
+/* ── 2. The live case the injection re-creates ── */
 export const HERO_FINDING: Finding = {
   id: 'F-D00',
   ruleId: 'DUP-002',
