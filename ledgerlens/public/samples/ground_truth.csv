@@ -1,0 +1,35 @@
+fraud_id,fraud_type,expected_rules,invoice_ids,po_ids,vendor_ids,note
+F001-dup,duplicate_resend,DUP-002|DUP-004|DUP-007,INV-9307|INV-9314,,V-056,"same amount, new number, days apart"
+F002-dup,duplicate_resend,DUP-002|DUP-004|DUP-007,INV-9321|INV-9328,,V-055,"same amount, new number, days apart"
+F003-trn,transposed_number,DUP-002|DUP-004,INV-9335|INV-9342,,V-032,one-character keying slip
+F004-trn,transposed_number,DUP-002|DUP-004,INV-9349|INV-9356,,V-061,one-character keying slip
+F005-exd,exact_duplicate,DUP-001|DUP-002,INV-9363|INV-9370,,V-106,identical number and amount
+F006-exd,exact_duplicate,DUP-001|DUP-002,INV-9377|INV-9384,,V-021,identical number and amount
+F007-alias,cross_alias_duplicate,DUP-002|DUP-007,INV-9391|INV-9398,,V-001|V-A01,same bill under two trading names
+F008-alias,cross_alias_duplicate,DUP-002|DUP-007,INV-9405|INV-9412,,V-008|V-A02,same bill under two trading names
+F009-split,po_splitting,BHV-001|BHV-002,,PO-4703|PO-4706|PO-4709|PO-4712,V-081,4 orders just under the threshold in one week
+F010-split,po_splitting,BHV-001|BHV-002,,PO-4715|PO-4718|PO-4721|PO-4724|PO-4727,V-062,5 orders just under the threshold in one week
+F011-price,price_gouging,PRC-001|PRC-004,INV-9419,,V-086,unit price far above peer median
+F012-price,price_gouging,PRC-001|PRC-004,INV-9426,,V-022,unit price far above peer median
+F013-creep,price_creep,PRC-003,,,V-C00,5% per quarter over six quarters
+F014-creep,price_creep,PRC-003,,,V-C01,5% per quarter over six quarters
+F015-ring,vendor_ring,VND-001,,,V-R00|V-R01|V-R02,3 vendors on bank account HDFC-RING00
+F016-ring,vendor_ring,VND-001,,,V-R10|V-R11|V-R12,3 vendors on bank account HDFC-RING01
+F017-ring,vendor_ring,VND-001,,,V-R20|V-R21|V-R22,3 vendors on bank account HDFC-RING02
+F018-vemp,vendor_employee,VND-003,,,V-E00,shares address with E-100
+F019-vemp,vendor_employee,VND-003,,,V-E01,shares address with E-101
+F020-vemp,vendor_employee,VND-003,,,V-E02,shares address with E-102
+F021-3way,three_way_mismatch,CMP-001,INV-9601,PO-4730,V-045,"GRN short of PO, invoice full"
+F022-3way,three_way_mismatch,CMP-001,INV-9608,PO-4733,V-049,"GRN short of PO, invoice full"
+F023-3way,three_way_mismatch,CMP-001,INV-9615,PO-4736,V-R10,"GRN short of PO, invoice full"
+F024-msme,msme_breach,CMP-004,INV-9622,,V-037,paid beyond 45 days to an MSME vendor
+F025-msme,msme_breach,CMP-004,INV-9629,,V-057,paid beyond 45 days to an MSME vendor
+F026-msme,msme_breach,CMP-004,INV-9636,,V-048,paid beyond 45 days to an MSME vendor
+F027-gst,duplicate_gst_no,CMP-002,INV-9643|INV-9650,,V-039,same number twice in one FY
+F028-gst,duplicate_gst_no,CMP-002,INV-9657|INV-9664,,V-041,same number twice in one FY
+F029-gst,duplicate_gst_no,CMP-002,INV-9671|INV-9678,,V-118,same number twice in one FY
+F030-sod,self_approval,CMP-006,,PO-4739,V-R20,same person raised and approved
+F031-sod,self_approval,CMP-006,,PO-4742,V-035,same person raised and approved
+F032-sod,self_approval,CMP-006,,PO-4745,V-111,same person raised and approved
+F033-hours,off_hours,BHV-005,INV-9685|INV-9692|INV-9699|INV-9706|INV-9713|INV-9720|INV-9727|INV-9734|INV-9741|INV-9748|INV-9755|INV-9762|INV-9769|INV-9776,,V-E01,filings concentrated between 23:00 and 04:00
+F034-hours,off_hours,BHV-005,INV-9783|INV-9790|INV-9797|INV-9804|INV-9811|INV-9818|INV-9825|INV-9832|INV-9839|INV-9846|INV-9853|INV-9860|INV-9867|INV-9874,,V-030,filings concentrated between 23:00 and 04:00

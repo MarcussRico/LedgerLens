@@ -1,9 +1,13 @@
 # Sample dataset
 
 Six CSVs of realistic Indian procurement data, plus the ground truth that says
-what was planted in them. Drop the six into **Analyse your data** on
-[ledgerlens-ten.vercel.app](https://ledgerlens-ten.vercel.app) and the live
-engine will read them.
+what was planted in them.
+
+**The site ships these files.** Open **Analyse your data** on
+[ledgerlens-ten.vercel.app](https://ledgerlens-ten.vercel.app), press *Load the
+sample dataset*, and all six stage themselves with their kinds detected. Each is
+also downloadable individually from that panel. Nothing is fetched until you ask
+for it, so a plain page load still makes no network request.
 
 | File | Rows | What it is |
 |---|---|---|

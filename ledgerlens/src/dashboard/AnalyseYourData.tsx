@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Upload, FileSpreadsheet, X, Play, AlertTriangle, CircleCheck, Loader2,
-  Sparkle, Download, ChevronDown,
+  Sparkle, Download, ChevronDown, FileDown,
 } from 'lucide-react'
 import { Panel } from './shell'
 import { Chip } from '../components/ui/primitives'
 import { cn, formatINR, groupIN } from '../lib/utils'
 import {
-  analyse, checkHealth, sampleInvoicesCsv, sampleVendorsCsv, SOURCE_KINDS,
-  ApiError, API_BASE,
+  analyse, checkHealth, fetchSample, SAMPLE_FILES, GROUND_TRUTH_URL, sampleUrl,
+  SOURCE_KINDS, ApiError, API_BASE,
   type AnalyseResponse, type ApiFinding, type SourceKind, type HealthResponse,
 } from '../lib/api'
 import { useStore } from '../lib/store'
@@ -262,14 +262,19 @@ export function AnalyseYourData() {
     setError(null)
   }, [])
 
-  const loadSample = useCallback(() => {
-    const mk = (name: string, body: string) =>
-      new File([body], name, { type: 'text/csv' })
-    setStaged([
-      { file: mk('invoices.csv', sampleInvoicesCsv()), kind: 'invoices', id: 'sample-inv' },
-      { file: mk('vendors.csv', sampleVendorsCsv()), kind: 'vendors', id: 'sample-ven' },
-    ])
-    setResult(null); setError(null)
+  const [loadingSample, setLoadingSample] = useState<string | null>(null)
+
+  const loadSample = useCallback(async () => {
+    setResult(null); setError(null); setLoadingSample('0 / 6')
+    try {
+      const files = await fetchSample((n, total) => setLoadingSample(`${n} / ${total}`))
+      setStaged(files.map(({ file, kind }) => ({ file, kind, id: `sample-${file.name}` })))
+    } catch (err) {
+      const e = err as ApiError
+      setError({ message: e.message ?? 'Could not load the sample.', hint: e.hint })
+    } finally {
+      setLoadingSample(null)
+    }
   }, [])
 
   const run = useCallback(async () => {
@@ -338,11 +343,37 @@ export function AnalyseYourData() {
               <input ref={inputRef} type="file" multiple accept=".csv,.xlsx,.xls,.json" className="sr-only"
                 onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = '' }} />
 
-              <button type="button" onClick={loadSample}
-                className="mt-3 inline-flex items-center gap-2 text-[0.6875rem] text-[var(--color-slate)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[var(--color-paper)]">
-                <Download className="size-3.5" strokeWidth={1.5} aria-hidden />
-                No file to hand? Load a deliberately messy sample
-              </button>
+              <div className="mt-4 border border-[var(--color-line)] px-3 py-3">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="kicker">No file to hand?</p>
+                  <span className="num text-[0.5625rem] text-[var(--color-muted)]">4,024 rows · 6 files</span>
+                </div>
+                <p className="mt-2 text-[0.6875rem] leading-relaxed text-[var(--color-paper-dim)]">
+                  A real procurement export with ERP headers, DD/MM dates, lakh-grouped money and
+                  free-text item descriptions — and 34 frauds planted in it.
+                </p>
+                <button type="button" onClick={loadSample} disabled={!!loadingSample}
+                  className={cn('mt-3 inline-flex w-full items-center justify-center gap-2 border px-3 py-2 text-[0.75rem] transition-colors',
+                    'border-[var(--color-slate)] text-[var(--color-slate)] hover:border-[var(--color-paper-dim)] hover:text-[var(--color-paper)]',
+                    'disabled:cursor-not-allowed disabled:opacity-50')}>
+                  {loadingSample
+                    ? <><Loader2 className="size-3.5 animate-spin" strokeWidth={1.5} aria-hidden /> Loading {loadingSample}</>
+                    : <><Download className="size-3.5" strokeWidth={1.5} aria-hidden /> Load the sample dataset</>}
+                </button>
+                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  {SAMPLE_FILES.map((f) => (
+                    <a key={f.name} href={sampleUrl(f.name)} download
+                      className="num inline-flex items-center gap-1 text-[0.5625rem] text-[var(--color-muted)] underline decoration-dotted underline-offset-2 transition-colors hover:text-[var(--color-paper-dim)]">
+                      <FileDown className="size-2.5" strokeWidth={1.5} aria-hidden />{f.name}
+                    </a>
+                  ))}
+                </div>
+                <a href={GROUND_TRUTH_URL} download
+                  className="num mt-2 inline-flex items-center gap-1 text-[0.5625rem] text-[var(--color-verify)] underline decoration-dotted underline-offset-2">
+                  <FileDown className="size-2.5" strokeWidth={1.5} aria-hidden />
+                  ground_truth.csv — what was planted, so you can mark our homework
+                </a>
+              </div>
 
               {staged.length > 0 && (
                 <ul className="mt-4 space-y-1.5">

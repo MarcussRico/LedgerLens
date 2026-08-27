@@ -37,13 +37,23 @@ app = FastAPI(
                 "the language model only explains and drafts.",
 )
 
+# A hardcoded port list broke the moment the site was served from a different
+# one, and would break for every Vercel preview URL — which is exactly the link
+# a reviewer is most likely to be handed. Match the production domain, any
+# preview of this project, and localhost on any port.
+ALLOWED_ORIGIN = re.compile(
+    r"^https://ledgerlens[a-z0-9-]*\.vercel\.app$"
+    r"|^https://ledgerlens-[a-z0-9]+-[a-z0-9-]+\.vercel\.app$"
+    r"|^http://(localhost|127\.0\.0\.1)(:\d+)?$"
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ledgerlens-ten.vercel.app", "http://localhost:5173",
-                   "http://localhost:4173"],
+    allow_origin_regex=ALLOWED_ORIGIN.pattern,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
+    max_age=3600,
 )
 
 

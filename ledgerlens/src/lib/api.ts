@@ -211,35 +211,52 @@ export async function analyse(
   }, timeoutMs)
 }
 
-/** A realistic messy file, so someone with no data to hand can still try it. */
-export function sampleInvoicesCsv(): string {
-  return [
-    'Doc Ref,Party Code,PO Number,Txn Dt,Gross Val,Tax Amt,GST Invoice No,Status,Booked Under,Sanctioned By,Payment Dt',
-    'INV-8790,V-001,PO-8801,18/08/2026,"1,24,500",19000,INV-8790,paid,Admin Stores,R. Muthukumar,21/08/2026',
-    'INV-8842,V-001,PO-8801,24/08/2026,"1,24,500",19000,INV-8842,held,Admin Stores,R. Muthukumar,',
-    'INV-7412,V-001,PO-3304,09/02/2026,"1,86,400",28434,INV-7412,paid,Admin Stores,R. Muthukumar,14/02/2026',
-    'INV-7461,V-002,PO-3304,14/02/2026,"1,86,400",28434,INV-7461,paid,Admin Stores,R. Muthukumar,20/02/2026',
-    'TIS-0884,V-010,PO-3312,21/11/2025,"1,42,800",21783,TIS/25-26/0884,paid,IT,K. Prakash,28/11/2025',
-    'TIS-0918,V-010,PO-3312,27/11/2025,"1,42,800",21783,TIS/25-26/0918,paid,IT,K. Prakash,03/12/2025',
-    'TE-1188,V-013,PO-3320,15/09/2025,"87,300",13317,TE/1188,paid,Facilities,S. Anitha,22/09/2025',
-    'TE-1I88,V-013,PO-3320,19/09/2025,"87,300",13317,TE/1I88,paid,Facilities,S. Anitha,26/09/2025',
-    'INV-5001,V-009,PO-4001,03/06/2026,"4,80,000",73220,INV-5001,paid,IT,K. Prakash,10/06/2026',
-    'INV-5002,V-008,PO-4002,11/06/2026,"96,000",14644,INV-5002,paid,Admin Stores,D. Lakshmi,18/06/2026',
-  ].join('\n')
+/* ── the bundled sample ────────────────────────────────────────────────────
+   Six real files served from this site's own origin, not a toy built in the
+   browser: 1,008 invoices, 915 POs, 1,008 line items, 160 vendor records. They
+   are fetched only when someone asks for them, so a plain page load still
+   makes no request at all. */
+
+export interface SampleFile {
+  name: string
+  kind: SourceKind
+  rows: number
+  bytes: number
 }
 
-export function sampleVendorsCsv(): string {
-  return [
-    'Vendor Code,Supplier Name,GSTIN,PAN,Account Number,Registered Address,Contact No,Vendor Since,MSME',
-    'V-001,Sharma Traders,33AABCS1234N1Z5,AABCS1234N,HDFC-4471,"17/3 Anna Nagar 4th Street, Madurai",+91 98765 43210,02/11/2023,Yes',
-    'V-002,M/s Sharma Traders Pvt Ltd,33AABCS1234N1Z5,AABCS1234N,HDFC 4471,"17/3 Anna Nagar 4th Street, Madurai",+91 98765 43210,17/01/2024,Yes',
-    'V-008,Pallava Stationers,33AABCP5678M1Z9,AABCP5678M,IOBA-2231,"44 GST Road, Chennai",+91 90000 11111,12/05/2022,No',
-    'V-009,Cortex Computing Systems,33AABCC9012L1Z3,AABCC9012L,ICICI-9083,"12 Mount Road, Chennai",+91 90000 22222,08/03/2022,No',
-    'V-010,Trident Infosystems,33AABCT3456K1Z7,AABCT3456K,ICICI-9083,"9 Avinashi Road, Coimbatore",+91 90000 33333,19/07/2023,No',
-    'V-013,Thangam Electricals,33AABCT7890J1Z1,AABCT7890J,KVBL-5567,"88 South Gate, Madurai",+91 90000 44444,25/09/2022,Yes',
-  ].join('\n')
-}
+export const SAMPLE_FILES: SampleFile[] = [
+  { name: 'invoices.csv', kind: 'invoices', rows: 1008, bytes: 146_000 },
+  { name: 'pos.csv', kind: 'pos', rows: 915, bytes: 71_000 },
+  { name: 'grns.csv', kind: 'grns', rows: 915, bytes: 33_000 },
+  { name: 'lines.csv', kind: 'lines', rows: 1008, bytes: 54_000 },
+  { name: 'vendors.csv', kind: 'vendors', rows: 160, bytes: 25_000 },
+  { name: 'employees.csv', kind: 'employees', rows: 18, bytes: 1_300 },
+]
 
+/** The planted frauds, so a reader can mark our homework rather than trust us. */
+export const GROUND_TRUTH_URL = '/samples/ground_truth.csv'
+
+export const sampleUrl = (name: string) => `/samples/${name}`
+
+export async function fetchSample(
+  onProgress?: (loaded: number, total: number) => void,
+): Promise<{ file: File; kind: SourceKind }[]> {
+  const out: { file: File; kind: SourceKind }[] = []
+  for (const [i, spec] of SAMPLE_FILES.entries()) {
+    const res = await fetch(sampleUrl(spec.name))
+    if (!res.ok) {
+      throw new ApiError(
+        `Could not load ${spec.name} (${res.status}).`,
+        res.status,
+        'The sample ships with this site, so this usually means a stale cache — reload and try again.',
+      )
+    }
+    const text = await res.text()
+    out.push({ file: new File([text], spec.name, { type: 'text/csv' }), kind: spec.kind })
+    onProgress?.(i + 1, SAMPLE_FILES.length)
+  }
+  return out
+}
 
 /* ── language-only endpoints ───────────────────────────────────────────────
    The engine drafts and explains. It is forbidden from arithmetic: every

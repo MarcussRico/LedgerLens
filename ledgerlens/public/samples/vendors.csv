@@ -1,0 +1,161 @@
+Vendor Code,Supplier Name,GSTIN,PAN,Account Number,Registered Address,Contact No,Email Domain,Vendor Since,MSME Regd,Spend Category
+V-001,Sharma & Sons,33ASHAS4713L9ZJ,ASHAS4713L,HDFC-100000,89/4 GST Road,+91 9694468049,accounts@sharmasons0.co.in,11/02/2023,No,IT Hardware
+V-002,Venkat Distributors,33AVENN9915Q4ZE,AVENN9915Q,SBIN-100001,188/5 Industrial Estate,+91 9104428557,accounts@venkatdistribu1.co.in,26/07/2024,Yes,Office Supplies
+V-003,Iyer Enterprises,33AIYEX1423Q9ZT,AIYEX1423Q,SBIN-100002,27/7 GST Road,+91 9953980629,accounts@iyerenterprise2.co.in,09/01/2024,Yes,Facilities
+V-004,Rajan Systems,33ARAJR8292H7ZX,ARAJR8292H,HDFC-100003,135/4 GST Road,+91 9707299361,accounts@rajansystems3.co.in,19/05/2023,No,Logistics
+V-005,Balaji Packaging,33ABALQ6913C1ZM,ABALQ6913C,KVBL-100004,21/5 Mill Street,+91 9225167038,accounts@balajipackagin4.co.in,04/12/2023,Yes,Raw Materials
+V-006,Krishnan Agencies,33AKRIR2541E1ZM,AKRIR2541E,HDFC-100005,98/5 GST Road,+91 9222605726,accounts@krishnanagenci5.co.in,06/01/2025,No,Professional Services
+V-007,Meenakshi Associates,33AMEEL4039F5ZM,AMEEL4039F,ICICI-100006,119/3 Bypass Road,+91 9350938060,accounts@meenakshiassoc6.co.in,25/09/2024,Yes,Packaging
+V-008,Ganesh Industries,33AGANL5725B9ZR,AGANL5725B,AXIS-100007,7/8 Mill Street,+91 9482160020,accounts@ganeshindustri7.co.in,15/10/2022,No,Electricals
+V-009,Anand Works,33AANAG2129R1ZJ,AANAG2129R,SBIN-100008,106/1 Mill Street,+91 9310529903,accounts@anandworks8.co.in,06/09/2023,No,IT Hardware
+V-010,Nithya Traders,33ANITR9145V3ZK,ANITR9145V,KVBL-100009,141/4 GST Road,+91 9179306480,accounts@nithyatraders9.co.in,18/05/2023,Yes,Office Supplies
+V-011,Pandian Supplies,33APANX6189X7ZE,APANX6189X,ICICI-100010,182/1 Industrial Estate,+91 9113760019,accounts@pandiansupplie10.co.in,02/01/2023,Yes,Facilities
+V-012,Murugan Technologies,33AMURL1760Y2ZT,AMURL1760Y,AXIS-100011,132/8 Mill Street,+91 9117414902,accounts@murugantechnol11.co.in,09/09/2023,No,Logistics
+V-013,Selvam & Sons,33ASELV3260K6ZB,ASELV3260K,ICICI-100012,117/7 Industrial Estate,+91 9903561900,accounts@selvamsons12.co.in,06/01/2024,Yes,Raw Materials
+V-014,Kannan Distributors,33AKANM4947B6ZL,AKANM4947B,ICICI-100013,44/7 GST Road,+91 9910963123,accounts@kannandistribu13.co.in,16/03/2023,No,Professional Services
+V-015,Ramesh Enterprises,33ARAMU1803P4ZK,ARAMU1803P,AXIS-100014,174/5 Industrial Estate,+91 9862505479,accounts@rameshenterpri14.co.in,04/04/2024,No,Packaging
+V-016,Kalyani Systems,33AKALC5387Q7ZV,AKALC5387Q,AXIS-100015,91/6 Bypass Road,+91 9989043543,accounts@kalyanisystems15.co.in,04/07/2024,No,Electricals
+V-017,Thangam Packaging,33ATHAX8420S5ZV,ATHAX8420S,KVBL-100016,96/8 GST Road,+91 9328470840,accounts@thangampackagi16.co.in,16/06/2023,No,IT Hardware
+V-018,Vetri Agencies,33AVETS5670D9ZR,AVETS5670D,KVBL-100017,150/6 Bypass Road,+91 9369843143,accounts@vetriagencies17.co.in,25/12/2022,No,Office Supplies
+V-019,Sundar Associates,33ASUNT7388J8ZT,ASUNT7388J,AXIS-100018,71/4 Bypass Road,+91 9375324512,accounts@sundarassociat18.co.in,24/12/2023,No,Facilities
+V-020,Palani Industries,33APALY8816J2ZC,APALY8816J,KVBL-100019,109/1 Industrial Estate,+91 9550589167,accounts@palaniindustri19.co.in,21/03/2024,No,Logistics
+V-021,Nataraj Works,33ANATP1276L7ZZ,ANATP1276L,KVBL-100020,110/8 Bypass Road,+91 9663281645,accounts@natarajworks20.co.in,03/07/2024,Yes,Raw Materials
+V-022,Ilango Traders,33AILAU7179C7ZM,AILAU7179C,ICICI-100021,131/8 Mill Street,+91 9580405782,accounts@ilangotraders21.co.in,19/12/2022,No,Professional Services
+V-023,Mahesh Supplies,33AMAHS8812D8ZC,AMAHS8812D,KVBL-100022,130/7 GST Road,+91 9680055426,accounts@maheshsupplies22.co.in,20/03/2024,No,Packaging
+V-024,Bhaskar Technologies,33ABHAL4454U8ZT,ABHAL4454U,KVBL-100023,178/2 Mill Street,+91 9365529537,accounts@bhaskartechnol23.co.in,28/01/2023,Yes,Electricals
+V-025,Yamuna & Sons,33AYAMZ9470W8ZZ,AYAMZ9470W,HDFC-100024,113/6 Bypass Road,+91 9533776862,accounts@yamunasons24.co.in,03/03/2023,No,IT Hardware
+V-026,Karthik Distributors,33AKARC3152S3ZZ,AKARC3152S,AXIS-100025,136/7 Mill Street,+91 9775767336,accounts@karthikdistrib25.co.in,30/11/2024,No,Office Supplies
+V-027,Suriya Enterprises,33ASURX5866C3ZB,ASURX5866C,SBIN-100026,145/5 Industrial Estate,+91 9306005622,accounts@suriyaenterpri26.co.in,27/12/2022,No,Facilities
+V-028,Aruna Systems,33AARUH6653R5ZZ,AARUH6653R,ICICI-100027,34/1 Mill Street,+91 9571701307,accounts@arunasystems27.co.in,07/06/2024,No,Logistics
+V-029,Sharma Packaging,33ASHAQ2721K9ZC,ASHAQ2721K,KVBL-100028,171/7 Industrial Estate,+91 9216863738,accounts@sharmapackagin28.co.in,03/06/2024,No,Raw Materials
+V-030,Venkat Agencies,33AVENZ4018H4ZQ,AVENZ4018H,ICICI-100029,19/8 Industrial Estate,+91 9220956778,accounts@venkatagencies29.co.in,05/03/2023,No,Professional Services
+V-031,Iyer Associates,33AIYEU8412J9ZN,AIYEU8412J,SBIN-100030,30/4 Bypass Road,+91 9410469813,accounts@iyerassociates30.co.in,10/03/2023,No,Packaging
+V-032,Rajan Industries,33ARAJL9580L2ZP,ARAJL9580L,AXIS-100031,91/5 Industrial Estate,+91 9830763036,accounts@rajanindustrie31.co.in,06/04/2024,Yes,Electricals
+V-033,Balaji Works,33ABALJ8153W9ZB,ABALJ8153W,AXIS-100032,114/5 GST Road,+91 9746781868,accounts@balajiworks32.co.in,28/07/2024,Yes,IT Hardware
+V-034,Krishnan Traders,33AKRIT7234L7ZP,AKRIT7234L,ICICI-100033,86/7 Mill Street,+91 9352882481,accounts@krishnantrader33.co.in,13/02/2024,Yes,Office Supplies
+V-035,Meenakshi Supplies,33AMEEE8847H5ZQ,AMEEE8847H,ICICI-100034,88/7 Industrial Estate,+91 9326878698,accounts@meenakshisuppl34.co.in,31/05/2024,No,Facilities
+V-036,Ganesh Technologies,33AGANH8954G3ZQ,AGANH8954G,HDFC-100035,48/6 Bypass Road,+91 9673029558,accounts@ganeshtechnolo35.co.in,29/07/2024,Yes,Logistics
+V-037,Anand & Sons,33AANAM4562S5ZE,AANAM4562S,ICICI-100036,11/1 GST Road,+91 9896288572,accounts@anandsons36.co.in,18/01/2024,Yes,Raw Materials
+V-038,Nithya Distributors,33ANITC7110Z6ZR,ANITC7110Z,KVBL-100037,116/8 Industrial Estate,+91 9573354814,accounts@nithyadistribu37.co.in,30/11/2022,No,Professional Services
+V-039,Pandian Enterprises,33APANB9460E5ZL,APANB9460E,SBIN-100038,93/9 Bypass Road,+91 9106738052,accounts@pandianenterpr38.co.in,27/01/2025,No,Packaging
+V-040,Murugan Systems,33AMURA9020L2ZM,AMURA9020L,SBIN-100039,50/2 Bypass Road,+91 9903667774,accounts@murugansystems39.co.in,24/01/2025,No,Electricals
+V-041,Selvam Packaging,33ASELN3572E4ZL,ASELN3572E,SBIN-100040,170/8 Industrial Estate,+91 9293258418,accounts@selvampackagin40.co.in,19/10/2024,No,IT Hardware
+V-042,Kannan Agencies,33AKANC8481A1ZV,AKANC8481A,KVBL-100041,3/2 Mill Street,+91 9193502225,accounts@kannanagencies41.co.in,08/11/2024,No,Office Supplies
+V-043,Ramesh Associates,33ARAMW2802Q6ZY,ARAMW2802Q,HDFC-100042,107/4 Industrial Estate,+91 9653433993,accounts@rameshassociat42.co.in,07/03/2023,No,Facilities
+V-044,Kalyani Industries,33AKALS7690R5ZX,AKALS7690R,KVBL-100043,142/2 GST Road,+91 9217575983,accounts@kalyaniindustr43.co.in,30/10/2023,No,Logistics
+V-045,Thangam Works,33ATHAZ8979G2ZU,ATHAZ8979G,ICICI-100044,144/7 Industrial Estate,+91 9199258256,accounts@thangamworks44.co.in,08/09/2023,Yes,Raw Materials
+V-046,Vetri Traders,33AVETM8783D8ZE,AVETM8783D,AXIS-100045,160/7 Bypass Road,+91 9419413243,accounts@vetritraders45.co.in,19/01/2024,Yes,Professional Services
+V-047,Sundar Supplies,33ASUNL4423U5ZM,ASUNL4423U,KVBL-100046,137/3 Mill Street,+91 9339196115,accounts@sundarsupplies46.co.in,27/12/2023,No,Packaging
+V-048,Palani Technologies,33APALA8673C5ZE,APALA8673C,ICICI-100047,120/3 GST Road,+91 9765574768,accounts@palanitechnolo47.co.in,13/02/2024,Yes,Electricals
+V-049,Nataraj & Sons,33ANATD4925U8ZD,ANATD4925U,ICICI-100048,37/7 GST Road,+91 9860061323,accounts@natarajsons48.co.in,17/12/2023,No,IT Hardware
+V-050,Ilango Distributors,33AILAT4581J5ZL,AILAT4581J,KVBL-100049,79/9 Bypass Road,+91 9970803539,accounts@ilangodistribu49.co.in,28/09/2023,No,Office Supplies
+V-051,Mahesh Enterprises,33AMAHF8512B1ZW,AMAHF8512B,AXIS-100050,4/4 Industrial Estate,+91 9818092412,accounts@maheshenterpri50.co.in,19/08/2023,No,Facilities
+V-052,Bhaskar Systems,33ABHAC2609J3ZB,ABHAC2609J,SBIN-100051,12/1 Bypass Road,+91 9167171866,accounts@bhaskarsystems51.co.in,28/04/2024,No,Logistics
+V-053,Yamuna Packaging,33AYAMA8671T9ZN,AYAMA8671T,AXIS-100052,39/6 GST Road,+91 9698689964,accounts@yamunapackagin52.co.in,06/04/2024,Yes,Raw Materials
+V-054,Karthik Agencies,33AKARK6561S1ZW,AKARK6561S,AXIS-100053,129/1 Mill Street,+91 9181870200,accounts@karthikagencie53.co.in,04/10/2024,Yes,Professional Services
+V-055,Suriya Associates,33ASURM8136M3ZC,ASURM8136M,KVBL-100054,149/2 Mill Street,+91 9457285528,accounts@suriyaassociat54.co.in,16/12/2024,Yes,Packaging
+V-056,Aruna Industries,33AARUC9672S8ZS,AARUC9672S,AXIS-100055,127/1 Industrial Estate,+91 9428390537,accounts@arunaindustrie55.co.in,27/07/2023,No,Electricals
+V-057,Sharma Works,33ASHAR8561B2ZQ,ASHAR8561B,SBIN-100056,76/5 Bypass Road,+91 9994841832,accounts@sharmaworks56.co.in,14/11/2023,Yes,IT Hardware
+V-058,Venkat Traders,33AVENB8348Y8ZU,AVENB8348Y,SBIN-100057,8/3 GST Road,+91 9128424886,accounts@venkattraders57.co.in,01/09/2023,No,Office Supplies
+V-059,Iyer Supplies,33AIYEQ1718C6ZK,AIYEQ1718C,AXIS-100058,148/7 Bypass Road,+91 9974284652,accounts@iyersupplies58.co.in,04/10/2022,No,Facilities
+V-060,Rajan Technologies,33ARAJB9068C3ZD,ARAJB9068C,AXIS-100059,13/5 GST Road,+91 9561415369,accounts@rajantechnolog59.co.in,04/07/2023,No,Logistics
+V-061,Balaji & Sons,33ABALS5237D1ZK,ABALS5237D,HDFC-100060,120/3 Industrial Estate,+91 9272263894,accounts@balajisons60.co.in,05/02/2023,No,Raw Materials
+V-062,Krishnan Distributors,33AKRIF2104P8ZL,AKRIF2104P,HDFC-100061,135/3 Bypass Road,+91 9683320532,accounts@krishnandistri61.co.in,19/04/2024,No,Professional Services
+V-063,Meenakshi Enterprises,33AMEEJ1590Z5ZM,AMEEJ1590Z,ICICI-100062,40/3 GST Road,+91 9333586497,accounts@meenakshienter62.co.in,07/11/2024,Yes,Packaging
+V-064,Ganesh Systems,33AGANK8562C2ZM,AGANK8562C,HDFC-100063,144/5 Mill Street,+91 9666928660,accounts@ganeshsystems63.co.in,30/01/2025,No,Electricals
+V-065,Anand Packaging,33AANAD3191T9ZR,AANAD3191T,ICICI-100064,177/6 Bypass Road,+91 9388333487,accounts@anandpackaging64.co.in,11/12/2023,No,IT Hardware
+V-066,Nithya Agencies,33ANITF8004U3ZP,ANITF8004U,ICICI-100065,67/6 GST Road,+91 9758184804,accounts@nithyaagencies65.co.in,11/12/2023,No,Office Supplies
+V-067,Pandian Associates,33APANG3323H3ZM,APANG3323H,KVBL-100066,143/6 Industrial Estate,+91 9100804315,accounts@pandianassocia66.co.in,18/02/2023,No,Facilities
+V-068,Murugan Industries,33AMURB3785E4ZH,AMURB3785E,AXIS-100067,28/6 GST Road,+91 9207075874,accounts@muruganindustr67.co.in,09/10/2024,No,Logistics
+V-069,Selvam Works,33ASELE1140R7ZB,ASELE1140R,SBIN-100068,170/3 Bypass Road,+91 9418552459,accounts@selvamworks68.co.in,04/03/2024,No,Raw Materials
+V-070,Kannan Traders,33AKANA3470A8ZR,AKANA3470A,KVBL-100069,137/3 Industrial Estate,+91 9861811064,accounts@kannantraders69.co.in,26/04/2023,No,Professional Services
+V-071,Ramesh Supplies,33ARAMD8480T3ZT,ARAMD8480T,AXIS-100070,181/1 Mill Street,+91 9101510857,accounts@rameshsupplies70.co.in,23/07/2023,Yes,Packaging
+V-072,Kalyani Technologies,33AKALC8697S2ZJ,AKALC8697S,AXIS-100071,74/6 Bypass Road,+91 9856495699,accounts@kalyanitechnol71.co.in,05/04/2023,No,Electricals
+V-073,Thangam & Sons,33ATHAC5562C9ZR,ATHAC5562C,HDFC-100072,31/4 GST Road,+91 9711601192,accounts@thangamsons72.co.in,05/02/2023,No,IT Hardware
+V-074,Vetri Distributors,33AVETD9630M8ZZ,AVETD9630M,HDFC-100073,187/2 Mill Street,+91 9687531600,accounts@vetridistribut73.co.in,02/08/2023,No,Office Supplies
+V-075,Sundar Enterprises,33ASUNV7829D1ZA,ASUNV7829D,ICICI-100074,16/6 GST Road,+91 9121696859,accounts@sundarenterpri74.co.in,01/11/2023,No,Facilities
+V-076,Palani Systems,33APALR6590X6ZR,APALR6590X,HDFC-100075,77/3 Bypass Road,+91 9649760958,accounts@palanisystems75.co.in,03/04/2023,No,Logistics
+V-077,Nataraj Packaging,33ANATX3841V9ZP,ANATX3841V,KVBL-100076,176/3 GST Road,+91 9615658035,accounts@natarajpackagi76.co.in,16/10/2024,No,Raw Materials
+V-078,Ilango Agencies,33AILAT5815G8ZF,AILAT5815G,HDFC-100077,184/4 Bypass Road,+91 9107260343,accounts@ilangoagencies77.co.in,03/10/2022,Yes,Professional Services
+V-079,Mahesh Associates,33AMAHL3108H8ZQ,AMAHL3108H,SBIN-100078,26/2 Bypass Road,+91 9290106166,accounts@maheshassociat78.co.in,08/08/2024,No,Packaging
+V-080,Bhaskar Industries,33ABHAV5138F7ZF,ABHAV5138F,KVBL-100079,91/4 GST Road,+91 9307611134,accounts@bhaskarindustr79.co.in,12/04/2023,No,Electricals
+V-081,Yamuna Works,33AYAMW9917H3ZY,AYAMW9917H,AXIS-100080,112/9 Mill Street,+91 9830057175,accounts@yamunaworks80.co.in,27/05/2023,Yes,IT Hardware
+V-082,Karthik Traders,33AKARP5148Q9ZH,AKARP5148Q,SBIN-100081,172/3 GST Road,+91 9403460082,accounts@karthiktraders81.co.in,26/09/2024,No,Office Supplies
+V-083,Suriya Supplies,33ASURY9345J9ZZ,ASURY9345J,KVBL-100082,89/1 Mill Street,+91 9546809291,accounts@suriyasupplies82.co.in,03/12/2022,No,Facilities
+V-084,Aruna Technologies,33AARUT1547S3ZA,AARUT1547S,ICICI-100083,141/4 Mill Street,+91 9509305747,accounts@arunatechnolog83.co.in,08/06/2023,Yes,Logistics
+V-085,Sharma & Sons (Trichy),33ASHAT7114K4ZP,ASHAT7114K,HDFC-100084,179/5 Bypass Road,+91 9926547236,accounts@sharmasonstric84.co.in,26/05/2024,Yes,Raw Materials
+V-086,Venkat Distributors (Erode),33AVENE5641A6ZM,AVENE5641A,AXIS-100085,144/5 Industrial Estate,+91 9189108293,accounts@venkatdistribu85.co.in,02/11/2022,No,Professional Services
+V-087,Iyer Enterprises (Hosur),33AIYEM3897Z6ZQ,AIYEM3897Z,HDFC-100086,49/5 Industrial Estate,+91 9615760485,accounts@iyerenterprise86.co.in,13/11/2022,No,Packaging
+V-088,Rajan Systems (Karur),33ARAJW6940Z1ZG,ARAJW6940Z,HDFC-100087,185/6 Industrial Estate,+91 9660382421,accounts@rajansystemska87.co.in,15/10/2024,No,Electricals
+V-089,Balaji Packaging (Tiruppur),33ABALW8894B4ZY,ABALW8894B,KVBL-100088,149/8 Industrial Estate,+91 9535147335,accounts@balajipackagin88.co.in,25/11/2022,Yes,IT Hardware
+V-090,Krishnan Agencies (Sivakasi),33AKRIY4328N5ZW,AKRIY4328N,SBIN-100089,92/7 Industrial Estate,+91 9352133941,accounts@krishnanagenci89.co.in,14/01/2023,No,Office Supplies
+V-091,Meenakshi Associates (Madurai),33AMEEB8421Q7ZY,AMEEB8421Q,KVBL-100090,165/2 Mill Street,+91 9951134076,accounts@meenakshiassoc90.co.in,17/12/2024,No,Facilities
+V-092,Ganesh Industries (Coimbatore),33AGANW8103K5ZJ,AGANW8103K,KVBL-100091,11/4 Bypass Road,+91 9608521561,accounts@ganeshindustri91.co.in,20/06/2024,No,Logistics
+V-093,Anand Works (Chennai),33AANAY6326Y5ZV,AANAY6326Y,KVBL-100092,166/2 GST Road,+91 9693258525,accounts@anandworkschen92.co.in,16/09/2024,Yes,Raw Materials
+V-094,Nithya Traders (Salem),33ANITS5520P6ZA,ANITS5520P,SBIN-100093,171/4 Bypass Road,+91 9806246649,accounts@nithyatraderss93.co.in,20/04/2023,No,Professional Services
+V-095,Pandian Supplies (Trichy),33APANC2225F2ZT,APANC2225F,KVBL-100094,166/8 Mill Street,+91 9242268882,accounts@pandiansupplie94.co.in,27/12/2023,No,Packaging
+V-096,Murugan Technologies (Erode),33AMURG8186L1ZX,AMURG8186L,AXIS-100095,123/8 Industrial Estate,+91 9224333714,accounts@murugantechnol95.co.in,22/11/2023,No,Electricals
+V-097,Selvam & Sons (Hosur),33ASELC9809U7ZS,ASELC9809U,HDFC-100096,11/7 GST Road,+91 9489567565,accounts@selvamsonshosu96.co.in,29/11/2024,No,IT Hardware
+V-098,Kannan Distributors (Karur),33AKANJ9890C7ZB,AKANJ9890C,HDFC-100097,67/7 Bypass Road,+91 9488638816,accounts@kannandistribu97.co.in,26/11/2022,No,Office Supplies
+V-099,Ramesh Enterprises (Tiruppur),33ARAMB1413N6ZD,ARAMB1413N,KVBL-100098,61/8 Bypass Road,+91 9923119133,accounts@rameshenterpri98.co.in,18/06/2024,Yes,Facilities
+V-100,Kalyani Systems (Sivakasi),33AKALV1678V9ZN,AKALV1678V,AXIS-100099,63/4 Bypass Road,+91 9516566645,accounts@kalyanisystems99.co.in,04/03/2023,No,Logistics
+V-101,Thangam Packaging (Madurai),33ATHAF7552P9ZF,ATHAF7552P,SBIN-100100,4/5 Mill Street,+91 9416632498,accounts@thangampackagi100.co.in,29/07/2024,Yes,Raw Materials
+V-102,Vetri Agencies (Coimbatore),33AVETV6354M7ZF,AVETV6354M,ICICI-100101,185/4 Bypass Road,+91 9604956792,accounts@vetriagenciesc101.co.in,31/05/2023,No,Professional Services
+V-103,Sundar Associates (Chennai),33ASUNJ6484J5ZJ,ASUNJ6484J,KVBL-100102,6/2 Industrial Estate,+91 9541367310,accounts@sundarassociat102.co.in,08/02/2024,No,Packaging
+V-104,Palani Industries (Salem),33APALJ7262L5ZB,APALJ7262L,SBIN-100103,107/6 Mill Street,+91 9299353917,accounts@palaniindustri103.co.in,23/02/2024,Yes,Electricals
+V-105,Nataraj Works (Trichy),33ANATC9015P1ZE,ANATC9015P,ICICI-100104,66/1 GST Road,+91 9477776219,accounts@natarajworkstr104.co.in,21/07/2024,No,IT Hardware
+V-106,Ilango Traders (Erode),33AILAY4991U5ZP,AILAY4991U,ICICI-100105,144/4 Mill Street,+91 9289013812,accounts@ilangotraderse105.co.in,04/11/2022,Yes,Office Supplies
+V-107,Mahesh Supplies (Hosur),33AMAHD6437T6ZS,AMAHD6437T,KVBL-100106,175/7 Mill Street,+91 9543929945,accounts@maheshsupplies106.co.in,21/06/2024,No,Facilities
+V-108,Bhaskar Technologies (Karur),33ABHAK6432V2ZD,ABHAK6432V,AXIS-100107,84/6 Industrial Estate,+91 9126773136,accounts@bhaskartechnol107.co.in,14/03/2024,No,Logistics
+V-109,Yamuna & Sons (Tiruppur),33AYAMK4017Z5ZS,AYAMK4017Z,SBIN-100108,102/1 Bypass Road,+91 9839862119,accounts@yamunasonstiru108.co.in,24/11/2022,No,Raw Materials
+V-110,Karthik Distributors (Sivakasi),33AKARF3317C1ZT,AKARF3317C,SBIN-100109,122/4 Bypass Road,+91 9833521380,accounts@karthikdistrib109.co.in,07/09/2024,No,Professional Services
+V-111,Suriya Enterprises (Madurai),33ASURR5456P6ZE,ASURR5456P,HDFC-100110,60/2 Bypass Road,+91 9733286500,accounts@suriyaenterpri110.co.in,26/03/2023,No,Packaging
+V-112,Aruna Systems (Coimbatore),33AARUZ9715G9ZE,AARUZ9715G,SBIN-100111,145/4 Bypass Road,+91 9315637445,accounts@arunasystemsco111.co.in,20/10/2022,No,Electricals
+V-113,Sharma Packaging (Chennai),33ASHAR6938A7ZU,ASHAR6938A,KVBL-100112,167/5 Mill Street,+91 9603030269,accounts@sharmapackagin112.co.in,18/03/2024,No,IT Hardware
+V-114,Venkat Agencies (Salem),33AVENX8218P7ZM,AVENX8218P,ICICI-100113,143/7 GST Road,+91 9381820544,accounts@venkatagencies113.co.in,26/09/2023,No,Office Supplies
+V-115,Iyer Associates (Trichy),33AIYEX6536V8ZK,AIYEX6536V,KVBL-100114,188/8 Mill Street,+91 9813363373,accounts@iyerassociates114.co.in,04/08/2023,Yes,Facilities
+V-116,Rajan Industries (Erode),33ARAJJ7629E8ZY,ARAJJ7629E,HDFC-100115,12/5 Bypass Road,+91 9401382764,accounts@rajanindustrie115.co.in,13/01/2023,Yes,Logistics
+V-117,Balaji Works (Hosur),33ABALN1201V5ZE,ABALN1201V,HDFC-100116,76/6 Bypass Road,+91 9449378670,accounts@balajiworkshos116.co.in,27/12/2023,No,Raw Materials
+V-118,Krishnan Traders (Karur),33AKRIU9551W8ZR,AKRIU9551W,HDFC-100117,167/5 Industrial Estate,+91 9848327036,accounts@krishnantrader117.co.in,15/08/2023,No,Professional Services
+V-A01,M/s Sharma & Sons Pvt Ltd,33ASHAS4713L9ZJ,ASHAS4713L,HDFC-100000,89/4 GST Road,+91 9694468049,accounts@sharmasons0.co.in,11/02/2023,No,IT Hardware
+V-A02,M/s Ganesh Industries Pvt Ltd,33AGANL5725B9ZR,AGANL5725B,AXIS-100007,7/8 Mill Street,+91 9482160020,accounts@ganeshindustri7.co.in,15/10/2022,No,Electricals
+V-C00,Sharma Supply Co,33AC0XD5270Y6ZZ,AC0XJ2650L,SBIN-900000,40/2 Industrial Estate,+91 9783245187,accounts@creep0.co.in,01/03/2025,No,Raw Materials
+V-C01,Murugan Supply Co,33AC1XY5104X2ZB,AC1XP1848R,SBIN-900001,41/2 Industrial Estate,+91 9676939445,accounts@creep1.co.in,01/03/2025,No,Raw Materials
+V-R00,Sharma Traders,33AR00G1439Y8ZD,AR00T4005P,HDFC-RING00,17/3 Anna Nagar 4th Street,+91 9524136044,accounts@ring0.co.in,01/03/2025,No,Facilities
+V-R01,Venkat Enterprises,33AR01K9117A7ZG,AR01K5307U,HDFC-RING00,17/3 Anna Nagar 4th Street,+91 9604308499,accounts@ring0.co.in,01/03/2025,No,Facilities
+V-R02,Iyer Industries,33AR02L8892Z9ZC,AR02G6957R,HDFC-RING00,17/3 Anna Nagar 4th Street,+91 9367294920,accounts@ring0.co.in,01/03/2025,No,Facilities
+V-R10,Rajan Enterprises,33AR10R7703A6ZT,AR10X6368Z,HDFC-RING01,18/3 Anna Nagar 4th Street,+91 9411518844,accounts@ring1.co.in,01/03/2025,No,Facilities
+V-R11,Balaji Industries,33AR11G5945Q9ZC,AR11M4226R,HDFC-RING01,18/3 Anna Nagar 4th Street,+91 9158270779,accounts@ring1.co.in,01/03/2025,No,Facilities
+V-R12,Krishnan & Sons,33AR12U2972J7ZS,AR12S9813S,HDFC-RING01,18/3 Anna Nagar 4th Street,+91 9690267646,accounts@ring1.co.in,01/03/2025,No,Facilities
+V-R20,Meenakshi Industries,33AR20M1498M4ZQ,AR20E2250F,HDFC-RING02,19/3 Anna Nagar 4th Street,+91 9879451665,accounts@ring2.co.in,01/03/2025,No,Facilities
+V-R21,Ganesh & Sons,33AR21B6230Z7ZJ,AR21B2621W,HDFC-RING02,19/3 Anna Nagar 4th Street,+91 9825500874,accounts@ring2.co.in,01/03/2025,No,Facilities
+V-R22,Anand Agencies,33AR22P2327E4ZP,AR22Z3210X,HDFC-RING02,19/3 Anna Nagar 4th Street,+91 9468117657,accounts@ring2.co.in,01/03/2025,No,Facilities
+V-E00,Sharma Services,33AE0XM1540X4ZL,AE0XY6961J,AXIS-9098,11/9 Anna Nagar,+91 9600188794,accounts@emp0.co.in,01/03/2025,No,Professional Services
+V-E01,Krishnan Services,33AE1XM2354J6ZQ,AE1XH1918S,AXIS-7920,23/7 Anna Nagar,+91 9430140754,accounts@emp1.co.in,01/03/2025,No,Professional Services
+V-E02,Pandian Services,33AE2XU1619K6ZM,AE2XU6374N,AXIS-3421,14/5 Anna Nagar,+91 9542844188,accounts@emp2.co.in,01/03/2025,No,Professional Services
+V-FM00,Sharma Traders Co,33AFM0T4569J5ZQ,AFM0C1272K,KVBL-700000,200/1 Mount Road,+91 9941947181,accounts@gmail.com,01/03/2025,Yes,Electricals
+V-FM01,Rajan Enterprises Co,33AFM1H8602Q4ZA,AFM1H8919M,KVBL-700001,201/1 Mount Road,+91 9848871234,accounts@gmail.com,01/03/2025,Yes,Professional Services
+V-FM02,Meenakshi Industries Co,33AFM2V5310T6ZT,AFM2W6270J,KVBL-700002,202/1 Mount Road,+91 9549515645,accounts@gmail.com,01/03/2025,Yes,IT Hardware
+V-FM03,Nithya & Sons Co,33AFM3G9367A8ZX,AFM3K4724B,KVBL-700003,203/1 Mount Road,+91 9813849398,accounts@gmail.com,01/03/2025,Yes,IT Hardware
+V-FM04,Selvam Agencies Co,33AFM4H8901D3ZV,AFM4M1911N,KVBL-700004,204/1 Bazaar Street,+91 9298578475,accounts@gmail.com,01/03/2025,Yes,Facilities
+V-FM05,Kalyani Supplies Co,33AFM5Z8267E6ZL,AFM5S8554X,KVBL-700005,205/1 Bazaar Street,+91 9128034377,accounts@gmail.com,01/03/2025,Yes,Packaging
+V-FM06,Sundar Systems Co,33AFM6M5436G5ZG,AFM6A3799Z,KVBL-700006,206/1 Mount Road,+91 9647759269,accounts@gmail.com,01/03/2025,Yes,Professional Services
+V-FM07,Ilango Works Co,33AFM7A8275H2ZC,AFM7T2872L,KVBL-700007,207/1 Bazaar Street,+91 9215131040,accounts@gmail.com,01/03/2025,Yes,Facilities
+V-FM08,Yamuna Distributors Co,33AFM8T4838J3ZW,AFM8D7238M,KVBL-700008,208/1 Bazaar Street,+91 9119866690,accounts@gmail.com,01/03/2025,Yes,IT Hardware
+V-FM09,Aruna Associates Co,33AFM9U7088W3ZE,AFM9Y4010J,KVBL-700009,209/1 Mount Road,+91 9429733040,accounts@gmail.com,01/03/2025,Yes,Office Supplies
+V-FM10,Iyer Technologies Co,33AFM1J8811D8ZB,AFM1C1578M,KVBL-700010,210/1 Bazaar Street,+91 9967477329,accounts@gmail.com,01/03/2025,Yes,Professional Services
+V-FM11,Krishnan Packaging Co,33AFM1F9702C5ZH,AFM1G2976W,KVBL-700011,211/1 Mount Road,+91 9596565304,accounts@gmail.com,01/03/2025,Yes,Professional Services
+V-FM12,Anand Traders Co,33AFM1A2294E3ZN,AFM1S5874D,KVBL-700012,212/1 Mount Road,+91 9129000054,accounts@gmail.com,01/03/2025,Yes,Electricals
+V-FM13,Murugan Enterprises Co,33AFM1G8060Q3ZQ,AFM1X7106P,KVBL-700013,213/1 Mount Road,+91 9837870227,accounts@gmail.com,01/03/2025,Yes,Raw Materials
+V-FM14,Ramesh Industries Co,33AFM1L4638J7ZG,AFM1C7907N,KVBL-700014,214/1 Bazaar Street,+91 9105511322,accounts@gmail.com,01/03/2025,Yes,Electricals
+V-IE00,Iyer Fabricators,33AIE0K2378W8ZL,AIE0X5520X,AXIS-800000,"12 SIDCO Industrial Estate, Guindy",+91 9506585702,accounts@fab0works.co.in,01/03/2025,No,Raw Materials
+V-IE01,Nithya Fabricators,33AIE1X2807W8ZH,AIE1R2765F,AXIS-800001,"12 SIDCO Industrial Estate, Guindy",+91 9463848989,accounts@fab1works.co.in,01/03/2025,No,Raw Materials
+V-IE02,Thangam Fabricators,33AIE2K9915Q7ZU,AIE2B7817N,AXIS-800002,"12 SIDCO Industrial Estate, Guindy",+91 9361977962,accounts@fab2works.co.in,01/03/2025,No,Raw Materials
+V-IE03,Bhaskar Fabricators,33AIE3N5680W6ZB,AIE3R2800U,AXIS-800003,"12 SIDCO Industrial Estate, Guindy",+91 9711462906,accounts@fab3works.co.in,01/03/2025,No,Raw Materials
+V-IE04,Iyer Fabricators,33AIE4P7116E5ZN,AIE4W9268S,AXIS-800004,"12 SIDCO Industrial Estate, Guindy",+91 9893203680,accounts@fab4works.co.in,01/03/2025,No,Raw Materials
+V-IE05,Nithya Fabricators,33AIE5M1497X7ZH,AIE5H7933L,AXIS-800005,"12 SIDCO Industrial Estate, Guindy",+91 9546522667,accounts@fab5works.co.in,01/03/2025,No,Raw Materials
+V-IE06,Thangam Fabricators,33AIE6Q1731R1ZJ,AIE6S6616P,AXIS-800006,"12 SIDCO Industrial Estate, Guindy",+91 9997298816,accounts@fab6works.co.in,01/03/2025,No,Raw Materials
+V-IE07,Bhaskar Fabricators,33AIE7N1571T7ZZ,AIE7V4813W,AXIS-800007,"12 SIDCO Industrial Estate, Guindy",+91 9516628359,accounts@fab7works.co.in,01/03/2025,No,Raw Materials
+V-AC00,Nithya Consultancy,33AAC0Q5304L3ZU,AAC0H7868Z,SBIN-850000,300/4 Luz Corner,+91 9840112233,accounts@consult0.co.in,01/03/2025,Yes,Professional Services
+V-AC01,Ramesh Consultancy,33AAC1L6100J7ZC,AAC1U9921A,SBIN-850001,301/4 Luz Corner,+91 9840112233,accounts@consult1.co.in,01/03/2025,Yes,Professional Services
+V-AC02,Palani Consultancy,33AAC2H5173T3ZB,AAC2D5069L,SBIN-850002,302/4 Luz Corner,+91 9840112233,accounts@consult2.co.in,01/03/2025,Yes,Professional Services
