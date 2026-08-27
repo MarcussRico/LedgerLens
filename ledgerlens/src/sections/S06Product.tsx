@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import * as Tabs from '@radix-ui/react-tabs'
-import { LayoutGrid, ListTree, Tag, Share2, Activity, SlidersHorizontal, MessageSquareCode, Circle } from 'lucide-react'
+import { LayoutGrid, ListTree, Tag, Share2, Activity, SlidersHorizontal, MessageSquareCode, Circle, Upload } from 'lucide-react'
 import { Reveal } from '../components/ui/primitives'
 import { cn } from '../lib/utils'
 import { useStore } from '../lib/store'
@@ -14,6 +14,7 @@ const VendorGraph = lazy(() => import('../dashboard/VendorGraph').then((m) => ({
 const PatternLab = lazy(() => import('../dashboard/PatternLab').then((m) => ({ default: m.PatternLab })))
 const RiskStudio = lazy(() => import('../dashboard/RiskStudio').then((m) => ({ default: m.RiskStudio })))
 const AskLedgerLens = lazy(() => import('../dashboard/AskLedgerLens').then((m) => ({ default: m.AskLedgerLens })))
+const AnalyseYourData = lazy(() => import('../dashboard/AnalyseYourData').then((m) => ({ default: m.AnalyseYourData })))
 
 const VIEWS = [
   { id: 'command', label: 'Command Center', icon: LayoutGrid },
@@ -23,6 +24,7 @@ const VIEWS = [
   { id: 'patterns', label: 'Pattern Lab', icon: Activity },
   { id: 'risk', label: 'Risk Score Studio', icon: SlidersHorizontal },
   { id: 'ask', label: 'Ask LedgerLens', icon: MessageSquareCode },
+  { id: 'upload', label: 'Analyse your data', icon: Upload },
 ] as const
 
 function Loading() {
@@ -91,6 +93,7 @@ export function S06Product() {
                 <div className="hidden border-t border-[var(--color-line)] px-4 py-3 lg:block">
                   <p className="font-mono text-[0.5625rem] uppercase leading-relaxed tracking-[0.1em] text-[var(--color-muted)]">
                     {CORPUS.detectors} detectors<br />{CORPUS.findings} findings<br />5 pillars
+                    <br /><span className="text-[var(--color-verify)]">demo runs offline</span>
                   </p>
                 </div>
               </Tabs.List>
@@ -115,6 +118,9 @@ export function S06Product() {
                 </Tabs.Content>
                 <Tabs.Content value="ask" className="outline-none">
                   <Suspense fallback={<Loading />}><AskLedgerLens /></Suspense>
+                </Tabs.Content>
+                <Tabs.Content value="upload" className="outline-none">
+                  <Suspense fallback={<Loading />}><AnalyseYourData /></Suspense>
                 </Tabs.Content>
               </div>
             </Tabs.Root>

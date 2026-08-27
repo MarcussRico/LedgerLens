@@ -507,9 +507,10 @@ text(s, RX3, BODY_TOP + 3.10, 2.98, 0.9,
      size=8, color=MUTED, spacing=1.34)
 
 text(s, M, 6.42, 11.9, 0.3,
-     [[("Runs fully offline. ", {"color": PAPER}),
-       ("No backend, no network calls at runtime, seeded generation — the demo is "
-        "byte-identical on every reload and cannot fail on venue wifi.", {"color": PAPER_DIM})]],
+     [[("The demo runs fully offline. ", {"color": PAPER}),
+       ("Bundled client-side, seeded, byte-identical on every reload — it cannot fail on "
+        "venue wifi. The engine is live; only the \u2018analyse your own data\u2019 panel calls it.",
+        {"color": PAPER_DIM})]],
      size=10)
 
 
