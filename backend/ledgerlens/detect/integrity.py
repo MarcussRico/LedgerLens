@@ -147,11 +147,20 @@ class VendorRings:
                     "vendor_ids": sorted(component),
                     "vendor_names": [names[v] for v in sorted(component)],
                     "shared_attributes": shared,
-                    "links": [
-                        {"a": a, "b": b, "shared": d["attrs"],
-                         "values": d.get("values", {})}
-                        for a, b, d in sub.edges(data=True)
-                    ],
+                    # Sorted, and each pair orientated. networkx yields edges in
+                    # the iteration order of the component set, and Python
+                    # randomises string hashing per process — so the same ring
+                    # produced a differently-ordered list on every host and the
+                    # audit root did not reproduce.
+                    "links": sorted(
+                        (
+                            {"a": min(a, b), "b": max(a, b),
+                             "shared": sorted(set(d["attrs"])),
+                             "values": dict(sorted(d.get("values", {}).items()))}
+                            for a, b, d in sub.edges(data=True)
+                        ),
+                        key=lambda e: (e["a"], e["b"]),
+                    ),
                     "combined_spend": round(ring_spend, 2),
                     "link_evidence": round(float(strongest["evidence"]), 3),
                     "link_threshold": cfg.ring_link_threshold,

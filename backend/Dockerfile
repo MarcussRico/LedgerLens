@@ -1,6 +1,9 @@
 FROM python:3.12-slim
 
-ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+# PYTHONHASHSEED=0 disables per-process string-hash randomisation. This
+# system claims a reproducible audit root; any set iteration that reaches
+# output would otherwise order differently on every host.
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0
 WORKDIR /app
 
 # deps first so the layer caches across code changes

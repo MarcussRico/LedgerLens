@@ -78,3 +78,25 @@ def test_float_normalisation_does_not_change_a_hash():
         money_at_risk=money, confidence=0.9, explanation="ok",
         recommended_action=Action(kind="recover", label="l", detail="d"))
     assert finding_hash(mk(18000)) == finding_hash(mk(18000.0))
+
+
+def test_ring_links_are_ordered_deterministically():
+    """networkx yields edges in the iteration order of a Python set, and string
+    hashing is randomised per process. Two hosts produced identical findings
+    with differently-ordered link lists, so the audit root did not reproduce."""
+    import pandas as pd
+    from ledgerlens.detect.integrity import VendorRings
+
+    rows = [{"vendor_id": v, "name": n, "bank_account": "HDFC-9", "gstin": None,
+             "pan": None, "address": "1 Same Street", "phone": None,
+             "email_domain": None}
+            for v, n in [("V-C", "Gamma Co"), ("V-A", "Alpha Co"), ("V-B", "Beta Co")]]
+    ctx = ctx_with(vendors=pd.DataFrame(rows))
+    found = VendorRings().run(ctx)
+    assert found, "the ring was not detected at all"
+    links = found[0].evidence["links"]
+    keys = [(l["a"], l["b"]) for l in links]
+    assert keys == sorted(keys), f"links are not sorted: {keys}"
+    for l in links:
+        assert l["a"] <= l["b"], "edge pairs are not orientated"
+        assert l["shared"] == sorted(l["shared"]), "shared attributes are not sorted"
