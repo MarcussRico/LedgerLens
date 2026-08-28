@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LedgerLens Pitch Script</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --ground:#F2F1EE; --surface:#FAFAF8; --raise:#EAE8E3;
+    --ink:#16181C; --dim:#4A4E55; --muted:#767A81;
+    --rule:#DDDBD5; --rule-soft:#E8E6E1;
+    --gold:#8A6E12; --gold-soft:#B79A3C;
+    --signal:#A8412E; --verify:#3B6549; --slate:#4F6675;
+    --say:#16181C;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --ground:#0A0B0D; --surface:#121417; --raise:#191C21;
+      --ink:#E9E5DC; --dim:#A8A498; --muted:#7C8088;
+      --rule:#262A31; --rule-soft:#1B1E23;
+      --gold:#C9A227; --gold-soft:#8A7220;
+      --signal:#C4503A; --verify:#5B8F6E; --slate:#6B8394;
+      --say:#E9E5DC;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0A0B0D; --surface:#121417; --raise:#191C21;
+    --ink:#E9E5DC; --dim:#A8A498; --muted:#7C8088;
+    --rule:#262A31; --rule-soft:#1B1E23;
+    --gold:#C9A227; --gold-soft:#8A7220;
+    --signal:#C4503A; --verify:#5B8F6E; --slate:#6B8394;
+    --say:#E9E5DC;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Source Serif 4",Georgia,serif; font-size:17px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:60rem;margin:0 auto;padding:clamp(2rem,5vw,4.5rem) clamp(1.1rem,4vw,2.5rem) 6rem}
+
+  .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+  .fig{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-weight:500;
+       font-variant-numeric:tabular-nums;color:var(--gold);font-size:.94em}
+
+  /* masthead */
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.4rem;margin-bottom:2.6rem}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-.02em;
+     font-size:clamp(2.4rem,7vw,3.9rem);line-height:1.02;margin:.7rem 0 .5rem;text-wrap:balance}
+  .standfirst{color:var(--dim);font-size:1.02rem;max-width:52ch;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.6rem;margin-top:1.3rem;
+        font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);
+        text-transform:uppercase;letter-spacing:.1em}
+  .meta b{color:var(--gold);font-weight:500}
+
+  /* sections */
+  section{margin-top:3.1rem}
+  .head{display:grid;grid-template-columns:5.5rem 1fr;gap:1.1rem;align-items:baseline;
+        border-top:1px solid var(--rule);padding-top:.9rem;margin-bottom:1.1rem}
+  .tc{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--gold);
+      font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .tc small{display:block;color:var(--muted);font-size:.68rem;margin-top:.15rem;letter-spacing:.06em}
+  h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:1.75rem;
+     line-height:1.12;margin:0;letter-spacing:-.015em;text-wrap:balance}
+
+  /* the two registers: what you SAY vs what you DO */
+  .say{display:grid;grid-template-columns:5.5rem 1fr;gap:1.1rem;margin:0 0 1.15rem}
+  .say .gutter{}
+  .say p{margin:0 0 .85rem;color:var(--say);font-size:1.24rem;line-height:1.52;max-width:60ch}
+  .say p:last-child{margin-bottom:0}
+  .say em{font-style:italic;color:var(--gold)}
+
+  .do{display:grid;grid-template-columns:5.5rem 1fr;gap:1.1rem;margin:0 0 1.3rem}
+  .do .body{border-left:2px solid var(--gold-soft);background:var(--raise);
+            padding:.7rem .95rem;font-family:"JetBrains Mono",monospace;
+            font-size:.79rem;line-height:1.62;color:var(--dim)}
+  .do .body b{color:var(--ink);font-weight:500}
+  .do .body::before{content:"ON SCREEN";display:block;font-size:.62rem;letter-spacing:.16em;
+                    color:var(--muted);margin-bottom:.35rem}
+  .do.beat .body::before{content:"BEAT"}
+  .do.beat .body{border-left-color:var(--slate)}
+
+  /* evidence strip */
+  .cite{display:grid;grid-template-columns:5.5rem 1fr;gap:1.1rem;margin:-.4rem 0 1.3rem}
+  .cite .body{font-family:"JetBrains Mono",monospace;font-size:.71rem;color:var(--muted);
+              line-height:1.7;border-top:1px dotted var(--rule);padding-top:.5rem}
+  .cite .body span{color:var(--slate)}
+
+  /* closing card */
+  .close{border:1px solid var(--gold-soft);background:var(--surface);
+         padding:1.5rem 1.6rem;margin-top:2.4rem}
+  .close p{font-family:"Instrument Serif",Georgia,serif;font-size:1.5rem;line-height:1.22;
+           margin:0;color:var(--gold);max-width:34ch}
+
+  /* fallback answers */
+  .qa{margin-top:3.4rem;border-top:2px solid var(--ink);padding-top:1.4rem}
+  .qa h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:1.5rem;
+         margin:0 0 1.1rem;letter-spacing:-.01em}
+  .qa dl{margin:0;display:grid;gap:1.05rem}
+  .qa dt{font-family:"JetBrains Mono",monospace;font-size:.76rem;color:var(--signal);
+         letter-spacing:.02em;margin-bottom:.25rem}
+  .qa dd{margin:0;color:var(--dim);font-size:1rem;line-height:1.55;max-width:66ch}
+
+  @media (max-width:640px){
+    .head,.say,.do,.cite{grid-template-columns:1fr;gap:.4rem}
+    .tc small{display:inline;margin-left:.6rem}
+    .say p{font-size:1.12rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  a{color:var(--gold)}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Presenter script · procurement forensics</div>
+  <h1>LedgerLens</h1>
+  <p class="standfirst">Nine and a half minutes, timed. Large text is spoken. Boxed mono is what you do while saying it.</p>
+  <div class="meta">
+    <span>Runtime <b>9:30</b></span>
+    <span>Sections <b>8</b></span>
+    <span>Demo <b>2:30</b></span>
+    <span>Q&amp;A prep <b>at the end</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="head"><div class="tc">0:00<small>0:45</small></div><h2>Open on the thing itself</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Site open on the <b>hero</b>. Don't touch anything yet. Let the counter finish.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Five purchase orders. Forty-eight thousand rupees each. Same vendor, same week.</p>
+    <p>Every one of them correctly approved, by a manager acting entirely within their authority. Every one of them under the fifty-thousand-rupee limit that would have required a director.</p>
+    <p>Together they're two lakh forty thousand rupees that went around a control nobody broke.</p>
+    <p><em>No single document is wrong. You cannot find this by looking at documents.</em></p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">0:45<small>1:15</small></div><h2>How much this costs, and who catches it</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§02 The stakes</b>. Four figures count up. Let them.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Occupational fraud takes about <span class="fig">5%</span> of revenue a year. Between <span class="fig">0.8</span> and <span class="fig">2%</span> of everything a company pays out is a duplicate or an error — money already gone, for nothing.</p>
+    <p>The median scheme runs <span class="fig">12 months</span> before anyone notices.</p>
+    <p>And here's the number that decides whether software like ours should exist. <span class="fig">43%</span> of frauds are caught because one person tells on another. Internal audit catches fifteen. Data analytics barely registers.</p>
+    <p>The most common fraud-detection method in the world is still gossip.</p>
+  </div></div>
+  <div class="cite"><div class="gutter"></div><div class="body">
+    Sources on screen, linked: <span>ACFE, Report to the Nations 2026</span> · <span>APQC / IOFM duplicate-payment benchmarks</span>. Every statistic on the page carries its source.
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">2:00<small>0:45</small></div><h2>Why nobody catches it</h2></div>
+  <div class="do beat"><div class="gutter"></div><div class="body">Scroll to <b>§05 Root cause</b>. Stop talking for two seconds when the line lands.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>It isn't that auditors are careless. It's that the evidence doesn't exist inside any one document.</p>
+    <p>The duplicate is a relationship between this invoice and one from three weeks ago. The overcharge is a relationship between this price and eleven other vendors'. The shell company is a relationship between a vendor's bank account and an employee's.</p>
+    <p><em>Humans review invoices one at a time. The problems only exist across thousands at once.</em></p>
+    <p>A person cannot hold fifty thousand invoices in their head. A computer trivially can.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">2:45<small>1:30</small></div><h2>What we built</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§08 How it works</b>. Four bands draw themselves.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Four stages. <em>Ingest</em> takes whatever your ERP exports. <em>Resolve</em> works out which of your suppliers are secretly the same company, and which of your line items are secretly the same product. <em>Detect</em> runs <span class="fig">42</span> detectors across five pillars. <em>Act</em> puts a rupee figure on each one and drafts the letter.</p>
+    <p>Resolve is the stage everyone skips, and it's the one that makes the rest valid. If you compare a price before you know two descriptions mean the same item, you are comparing strings and reporting noise.</p>
+    <p>And there's a line drawn through the middle of that diagram.</p>
+  </div></div>
+  <div class="do beat"><div class="gutter"></div><div class="body">Point at the <b>determinism boundary</b>, then the gold box below it.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>No language model ever produces a number in this system. Rules and statistics compute. The model reads your column headers, explains a finding in English, and drafts an email. It never does arithmetic.</p>
+    <p>That isn't a preference. It's the property that decides whether a finance controller can defend the number to an auditor — because <em>"the model said so"</em> is not a defence.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">4:15<small>2:30</small></div><h2>The demo</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§06 The product</b>. Land on <b>Command Center</b>.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>This is a real company's books — synthetic, generated for evaluation, and labelled as such everywhere. Forty-two point six crore of spend. <span class="fig">5,847</span> invoices, <span class="fig">118</span> vendors, eighteen months.</p>
+    <p>Eighteen lakh forty-two thousand six hundred and fifty rupees recoverable. That's <span class="fig">0.43%</span> of spend — deliberately less than the published benchmark for duplicates alone, because we only claim what this data lets us prove.</p>
+  </div></div>
+
+  <div class="do"><div class="gutter"></div><div class="body">Click the <b>top finding</b> → evidence drawer opens.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Every finding opens the actual documents. Green is what matched, gold is what differed. Underneath, the score broken into the exact rules that produced it — no black box, every point traceable.</p>
+  </div></div>
+
+  <div class="do"><div class="gutter"></div><div class="body">Click <b>Draft audit committee memo</b>. Let it type. Point at the green "written by the live engine".</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>That memo is being written right now by our engine, which is running on a server, not in this page. And every figure in it was checked before you saw it — if the model had invented a number that isn't in the evidence, we'd have thrown the letter away rather than show it to you.</p>
+  </div></div>
+
+  <div class="do"><div class="gutter"></div><div class="body"><b>Pattern Lab</b> → the threshold histogram animates. Then <b>Vendor Integrity</b>.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Three hundred and seventy-one purchase orders sit just under the fifty-thousand limit. Twelve sit just above it. Nothing about ordinary purchasing produces that cliff.</p>
+    <p>And here — three vendors sharing one bank account, two sharing an address that matches the home address of the manager who approved thirty-four of their orders.</p>
+    <p>Note what we did <em>not</em> do. Same GST number means one company, so we merge them. Same bank account with three different names means somebody's being paid three times under three shells — so we keep them apart. Merge those and you delete the fraud instead of finding it.</p>
+  </div></div>
+
+  <div class="do"><div class="gutter"></div><div class="body">Last tab: <b>Analyse your data</b> → <b>Load the sample dataset</b> → <b>Analyse</b>. Six files, ~4 seconds.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Everything so far was prepared. This isn't. Six files with headers like <em>Doc Ref</em> and <em>Gross Val</em>, dates in day-month order, money written the Indian way.</p>
+    <p>First it grades the ledger itself — <em>is this even real accounting data?</em> Benford's law, round-number rate, terminal digits, filing times. This one scores <span class="fig">72</span> out of a hundred, and it tells you why.</p>
+    <p>Then: which columns it understood and how. Which suppliers were the same company. <span class="fig">93</span> findings, each opening the exact fields its rule compared. And at the bottom, a hash. Run the same files again and you get the same hash. Change one rupee and you don't.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">6:45<small>1:15</small></div><h2>What already exists, and what doesn't</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§09 Novelty</b>. The comparison table.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>We didn't invent the statistics. Benford's law in forensic accounting is Nigrini's work. Isolation Forest is Liu, Ting and Zhou, 2008. The fraud numbers are ACFE's. We cite all of it.</p>
+    <p>And there are four categories of tool that already do parts of this. ERP controls enforce policy at entry — but a compliant purchase order that's one of five splitting a purchase is still compliant. Invoice-capture software reads a document beautifully; the document is its whole world. Audit analytics can run corpus-wide tests, but an analyst has to specify each one, per engagement. Spend dashboards aggregate to categories — which is exactly the operation that hides a pattern inside a total.</p>
+    <p>None of them is wrong. They're all built around a document. The frauds that cost the most don't live inside one.</p>
+    <p>So: four things that are genuinely ours. The unit of analysis is the relationship, not the record. Resolution runs before comparison, not as a feature. Our accuracy is measured against frauds we planted, not asserted. And the model is structurally forbidden from arithmetic.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">8:00<small>1:00</small></div><h2>Proof, and where we're weakest</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§10 Proof</b>. The command is printed on screen.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>We built a simulator that plants <span class="fig">150</span> labelled frauds of known type into realistic spend, then runs the engine blind. Because we know exactly what we planted, this is a measurement, not a claim.</p>
+    <p><span class="fig">90.2%</span> precision. <span class="fig">98.7%</span> recall. That command is on the slide — run it yourself, it's seeded, you'll get the same answer.</p>
+    <p>Two honest things. That recall is an upper bound: the simulator plants the kinds of fraud our detectors were built to find, so it proves they work on their targets, not that we've covered everything. Precision is the number to trust.</p>
+    <p>And our weakest pillar is duplicates, at ninety-one percent. Our transposition rule matches invoice numbers within two characters, and across a big corpus some genuinely different documents differ by that little. We could tighten it — and we'd lose the case where a vendor re-keys a bill, which is the exact thing the rule exists to catch. So we left it, and we're telling you.</p>
+    <p>It handles fifty thousand invoices in twelve and a half seconds. We are not the bottleneck; getting the data out of your ERP is.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="head"><div class="tc">9:00<small>0:30</small></div><h2>Close</h2></div>
+  <div class="do"><div class="gutter"></div><div class="body">Scroll to <b>§12</b>. Then press <b>F</b>. Say nothing while it runs — 6.5 seconds.</div></div>
+  <div class="say"><div class="gutter"></div><div>
+    <p>Watch. A new invoice just arrived.</p>
+    <p>Same vendor, same amount, six days apart, different invoice number. Caught, priced, and the recovery letter drafted — in the time it took me to say that.</p>
+  </div></div>
+  <div class="close"><p>Humans review invoices one at a time. The problems only exist across thousands at once.</p></div>
+</section>
+
+<div class="qa">
+  <h3>If they push</h3>
+  <dl>
+    <dt>"Is this actually running, or is it a mock-up?"</dt>
+    <dd>The demo dataset is bundled so it can't fail on venue wifi. The last tab is a live engine on a server — hand me a CSV and we'll run it now. Forty-two detectors, and the response includes a hash you can reproduce.</dd>
+
+    <dt>"How do I know the AI isn't making up the numbers?"</dt>
+    <dd>It's checked, not trusted. Every number in a drafted letter has to appear in the evidence the rules produced; if the model derives a figure — even correctly adding two invoices — we discard the letter. That check caught it doing exactly that during development.</dd>
+
+    <dt>"Your savings figure looks too good."</dt>
+    <dd>On the demo it's 0.43% of spend, below the published benchmark for duplicates alone. On the live sample it's higher and the system says so itself — it flags any total above 5% of spend as implausible and tells you to quote only the measured tiers.</dd>
+
+    <dt>"What if the client's own records are forged?"</dt>
+    <dd>There's a zero-trust mode. Nineteen of our forty-two detectors need no baseline at all — mathematical invariants, statutory checks, and structural facts like a shared bank account. Those still work when the history itself is fiction.</dd>
+
+    <dt>"Can you add a rule for X?"</dt>
+    <dd>A detector is one file and one decorator — that's the plugin design on slide 5. Tell me the rule and I'll write it tonight. <b>Do not promise it inside the session; that sandbox isn't built.</b></dd>
+
+    <dt>"What's not finished?"</dt>
+    <dd>Open-ended natural language — the three questions in Ask are prepared, and the page says so. The feedback loop that reweights a detector from analyst labels is designed, not built. And ERP connectors are the real productionisation work.</dd>
+  </dl>
+</div>
+
+</div>
+</body>
+</html>
