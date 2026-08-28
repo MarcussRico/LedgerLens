@@ -17,3 +17,6 @@ dist/
 
 # os / editor
 .DS_Store
+
+# generated preview of the deck — rebuild with `python3 deck/preview.py`
+deck/preview.html
