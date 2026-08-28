@@ -1,0 +1,19 @@
+# Render Blueprint. Must live at the repository root — Render does not look
+# inside subdirectories for it. rootDir points the build at the backend.
+services:
+  - type: web
+    name: ledgerlens-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: singapore          # closest to an Indian audience
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      # Set in the Render dashboard. Never in the repo.
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
