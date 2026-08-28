@@ -7,9 +7,32 @@
  * one optional panel.
  */
 
-export const API_BASE: string =
-  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ??
-  'https://ledgerlens-api-production-8ed9.up.railway.app'
+/** Two independent deployments of the same engine. Railway is primary because
+ *  its free tier does not sleep; Render is the fallback and cold-starts in
+ *  under a minute. If one host is down the panel keeps working on the other. */
+export const API_HOSTS: readonly string[] = [
+  'https://ledgerlens-api-production-8ed9.up.railway.app',
+  'https://ledgerlens-api-p1xw.onrender.com',
+]
+
+const OVERRIDE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '')
+
+/** The host currently known to answer. Set by the first successful health check. */
+let liveHost: string | null = null
+
+export const hosts = (): string[] => (OVERRIDE ? [OVERRIDE] : [...API_HOSTS])
+
+/** Ordered so the host we last heard from is tried first. */
+function candidates(): string[] {
+  const all = hosts()
+  if (!liveHost) return all
+  return [liveHost, ...all.filter((h) => h !== liveHost)]
+}
+
+/** Kept as a plain string for display; the live host once one is known. */
+export const API_BASE: string = OVERRIDE ?? API_HOSTS[0]
+
+export const currentHost = (): string => liveHost ?? API_BASE
 
 export type SourceKind = 'invoices' | 'pos' | 'grns' | 'vendors' | 'lines' | 'employees'
 
@@ -189,12 +212,20 @@ async function withTimeout<T>(p: (signal: AbortSignal) => Promise<T>, ms: number
   }
 }
 
-export async function checkHealth(timeoutMs = 20_000): Promise<HealthResponse> {
-  return withTimeout(async (signal) => {
-    const res = await fetch(`${API_BASE}/api/health`, { signal })
-    if (!res.ok) throw new ApiError(`Engine returned ${res.status}`, res.status)
-    return (await res.json()) as HealthResponse
-  }, timeoutMs)
+export async function checkHealth(timeoutMs = 25_000): Promise<HealthResponse> {
+  let last: unknown = null
+  for (const host of candidates()) {
+    try {
+      const res = await withTimeout(
+        (signal) => fetch(`${host}/api/health`, { signal }), timeoutMs)
+      if (!res.ok) { last = new ApiError(`Engine returned ${res.status}`, res.status); continue }
+      liveHost = host
+      return (await res.json()) as HealthResponse
+    } catch (err) { last = err }
+  }
+  throw last instanceof ApiError ? last : new ApiError(
+    'No engine responded.', undefined,
+    'Both deployments are unreachable. Everything else on this page is bundled and still works.')
 }
 
 export interface AnalyseOptions {
@@ -218,18 +249,20 @@ export async function analyse(
   body.append('client_name', opts.clientName ?? 'Your organisation')
   body.append('use_llm', String(opts.useLlm ?? true))
 
-  return withTimeout(async (signal) => {
+  let networkFailure: unknown = null
+  for (const host of candidates()) {
     let res: Response
     try {
-      res = await fetch(`${API_BASE}/api/analyse`, { method: 'POST', body, signal })
-    } catch {
-      throw new ApiError(
-        'Could not reach the engine.',
-        undefined,
-        'This panel is the only part of the page that needs a network. Everything else on this site is bundled and still works.',
-      )
+      res = await withTimeout(
+        (signal) => fetch(`${host}/api/analyse`, { method: 'POST', body, signal }), timeoutMs)
+    } catch (err) {
+      // host unreachable or timed out — try the other deployment
+      networkFailure = err
+      continue
     }
     if (!res.ok) {
+      // the host answered, so it is up; a rejection here is about the request,
+      // not the host, and retrying elsewhere would only repeat it
       let detail = `Engine returned ${res.status}`
       try {
         const j = await res.json()
@@ -237,8 +270,12 @@ export async function analyse(
       } catch { /* keep the status-code message */ }
       throw new ApiError(detail, res.status)
     }
+    liveHost = host
     return (await res.json()) as AnalyseResponse
-  }, timeoutMs)
+  }
+  throw networkFailure instanceof ApiError ? networkFailure : new ApiError(
+    'Could not reach either engine.', undefined,
+    'This panel is the only part of the page that needs a network. Everything else on this site is bundled and still works.')
 }
 
 /* ── the bundled sample ────────────────────────────────────────────────────

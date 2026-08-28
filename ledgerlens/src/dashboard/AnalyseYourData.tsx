@@ -8,7 +8,7 @@ import { Chip } from '../components/ui/primitives'
 import { cn, formatINR, groupIN } from '../lib/utils'
 import {
   analyse, checkHealth, fetchSample, SAMPLE_FILES, GROUND_TRUTH_URL, sampleUrl,
-  SOURCE_KINDS, ApiError, API_BASE,
+  SOURCE_KINDS, ApiError, currentHost, API_HOSTS,
   type AnalyseResponse, type ApiFinding, type SourceKind, type HealthResponse,
 } from '../lib/api'
 import { useStore } from '../lib/store'
@@ -387,7 +387,10 @@ export function AnalyseYourData() {
               : health ? `Engine live · ${health.detectors} detectors · ${health.pillars} pillars`
               : 'Checking the engine…'}
           </span>
-          <span className="num text-[0.5625rem] text-[var(--color-line)]">{API_BASE.replace('https://', '')}</span>
+          <span className="num text-[0.5625rem] text-[var(--color-line)]">
+            {currentHost().replace('https://', '')}
+            {API_HOSTS.length > 1 && ` · ${API_HOSTS.length} deployments, automatic failover`}
+          </span>
         </div>
         <p className="mt-2 max-w-[86ch] text-[0.75rem] leading-relaxed text-[var(--color-paper-dim)]">
           Everything else on this page is bundled and runs with no network at all. This panel is the one

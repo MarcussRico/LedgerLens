@@ -46,6 +46,7 @@ app = FastAPI(
 ALLOWED_ORIGIN = re.compile(
     r"^https://ledgerlens[a-z0-9-]*\.vercel\.app$"
     r"|^https://ledgerlens-[a-z0-9]+-[a-z0-9-]+\.vercel\.app$"
+    r"|^https://ledgerlens[a-z0-9-]*\.onrender\.com$"
     r"|^http://(localhost|127\.0\.0\.1)(:\d+)?$"
 )
 
