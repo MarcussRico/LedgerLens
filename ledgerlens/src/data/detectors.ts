@@ -14,7 +14,7 @@ export interface PillarSpec {
 
 export const pillars: PillarSpec[] = [
   {
-    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.914, findings: 41,
+    n: 1, key: 'dup', pillar: 'Duplicates & Overpayment', accent: 'gold', precision: 0.935, findings: 41,
     blurb: 'The largest category of leakage, and almost never fraud. Somebody re-sent an invoice and both copies got paid.',
     detectors: [
       { id: 'DUP-002', name: 'Near-duplicate matching', flagship: true, note: 'Same vendor · amount within ±1% · date within 7 days · different invoice number.' },
@@ -43,7 +43,7 @@ export const pillars: PillarSpec[] = [
     ],
   },
   {
-    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.956, findings: 47,
+    n: 3, key: 'behav', pillar: 'Behavioural Anomalies', accent: 'signal', precision: 0.870, findings: 47,
     blurb: 'No single transaction is wrong. The shape of the distribution is wrong.',
     detectors: [
       { id: 'BEH-001', name: 'PO splitting', flagship: true, note: 'n orders · one vendor · one approval window · each sitting below the sign-off threshold.' },

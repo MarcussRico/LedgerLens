@@ -195,7 +195,7 @@ RX = 9.05
 vline(s, RX - 0.42, 1.44, 3.9, LINE, 0.9)
 facts = [("5,847", "invoices analysed"), ("1,203", "purchase orders"),
          ("118", "vendors · 96 resolved entities"), ("42", "detectors across 5 pillars"),
-         ("163", "findings, every one traceable"), ("90.2%", "precision on planted ground truth")]
+         ("163", "findings, every one traceable"), ("89.7%", "precision on planted ground truth")]
 yy = 1.44
 for v, k in facts:
     text(s, RX, yy, 3.4, 0.34, v, size=19, font=MONO, color=PAPER)
@@ -535,7 +535,7 @@ rows = [("Unit of analysis", "one record at a time",
         ("Risk score", "one opaque weighted sum",
          "five decomposable pillars, live weights, every point traced to a rule", False),
         ("Accuracy claim", "none possible",
-         "90.2% precision / 98.7% recall against 150 planted frauds — measured, "
+         "89.7% precision / 98.7% recall against 150 planted frauds — measured, "
          "not asserted", True),
         ("Role of the LLM", "asked to judge the data",
          "forbidden from arithmetic — language only", False),
@@ -641,7 +641,7 @@ for i, (nm, val, col) in enumerate(stages):
 RX5 = M + 7.9
 vline(s, RX5 - 0.3, BODY_TOP, 4.6, LINE, 0.9)
 text(s, RX5, BODY_TOP, 4.0, 0.26, " ".join("MEASURED, NOT ASSERTED"), size=8.5, font=MONO, color=MUTED)
-mets = [("90.2%", "precision"), ("98.7%", "recall"), ("94.3%", "F1")]
+mets = [("89.7%", "precision"), ("98.7%", "recall"), ("94.0%", "F1")]
 mx = RX5
 for v, k in mets:
     rect(s, mx, BODY_TOP + 0.32, 1.24, 0.78, PANEL, LINE, 0.8)
@@ -649,7 +649,7 @@ for v, k in mets:
     text(s, mx, BODY_TOP + 0.80, 1.24, 0.24, k, size=8, font=MONO, color=MUTED, align=PP_ALIGN.CENTER)
     mx += 1.32
 text(s, RX5, BODY_TOP + 1.20, 4.0, 0.60,
-     "TP 148 · FP 16 · FN 2 · TN 1,405\n"
+     "TP 148 · FP 17 · FN 2 · TN 1,419\n"
      "TP 148 + FN 2 = the 150 frauds we planted.\n"
      "python -m ledgerlens.eval.run",
      size=8.5, font=MONO, color=PAPER_DIM, spacing=1.34)
@@ -684,7 +684,7 @@ text(s, M, 2.15, 10.6, 1.9,
      size=40, font=DISPLAY, color=PAPER, spacing=1.06)
 hline(s, M, 4.5, W - 2 * M, LINE, 0.9)
 cols = [("₹18,42,650", "recoverable, identified", GOLD),
-        ("90.2% / 98.7%", "precision / recall, measured", VERIFY),
+        ("89.7% / 98.7%", "precision / recall, measured", VERIFY),
         ("42", "detectors, 5 pillars", PAPER),
         ("0", "numbers written by a language model", SIGNAL)]
 x = M

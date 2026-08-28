@@ -75,11 +75,11 @@ export const EVAL_CORPUS = {
   command: 'python -m ledgerlens.eval.run',
   note: 'A labelled corpus built to measure the engine — separate from the demo dataset shown here.',
 }
-export const confusion = { tp: 148, fp: 16, fn: 2, tn: 1_405 }
+export const confusion = { tp: 148, fp: 17, fn: 2, tn: 1_419 }
 export const PLANTED = confusion.tp + confusion.fn // 150
-export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.902
+export const PRECISION = confusion.tp / (confusion.tp + confusion.fp) // 0.897
 export const RECALL = confusion.tp / (confusion.tp + confusion.fn)    // 0.987
-export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.943
+export const F1 = (2 * PRECISION * RECALL) / (PRECISION + RECALL)     // 0.940
 
 export const pillarPrecision = pillars.map((p) => ({ pillar: p.pillar, key: p.key, precision: p.precision, accent: p.accent }))
 
@@ -111,11 +111,11 @@ export const metrics: Metric[] = [
   { id: 'ratio', label: 'Share of spend recovered', value: TOTAL_IDENTIFIED / CORPUS.spendAnalysed, display: '0.43%',
     derivation: `₹18,42,650 ÷ ₹42,60,00,000 = 0.43%. Published benchmarks put duplicate payments alone at 0.8–2% of disbursements, so this is a conservative read.`, citationId: 'apqc-dup' },
   { id: 'precision', label: 'Precision', value: PRECISION, display: '87.5%',
-    derivation: `TP 148 ÷ (TP 148 + FP 16) = 90.2%. Measured by running the engine blind against 150 planted frauds; reproduce with \`${EVAL_CORPUS.command}\`.` },
+    derivation: `TP 148 ÷ (TP 148 + FP 17) = 89.7%. Measured by running the engine blind against 150 planted frauds; reproduce with \`${EVAL_CORPUS.command}\`.` },
   { id: 'recall', label: 'Recall', value: RECALL, display: '98.7%',
     derivation: `TP 148 ÷ (TP 148 + FN 2) = 98.7%. 150 frauds were planted; 148 were caught. This is an upper bound — the simulator plants types the detectors were built to find.` },
-  { id: 'f1', label: 'F1', value: F1, display: '90.2%',
-    derivation: '2 × (0.902 × 0.987) ÷ (0.902 + 0.987) = 94.3%.' },
+  { id: 'f1', label: 'F1', value: F1, display: '89.7%',
+    derivation: '2 × (0.897 × 0.987) ÷ (0.897 + 0.987) = 94.0%.' },
   { id: 'phi', label: 'Procurement Health Index', value: 62, display: '62 / 100',
     derivation: 'Weighted across the five pillars: duplicates 18/25, price 11/20, behaviour 12/25, integrity 13/20, compliance 8/10 → 62.' },
 ]
